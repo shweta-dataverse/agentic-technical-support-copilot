@@ -22,6 +22,7 @@ src/copilot/llm/__init__.py
 src/copilot/llm/chains.py
 src/copilot/llm/model.py
 src/copilot/llm/prompts.py
+src/copilot/utils/logger.py
 src/copilot/vectorstore/__init__.py
 src/copilot/vectorstore/faiss_store.py
 src/copilot/vectorstore/retriever.py
