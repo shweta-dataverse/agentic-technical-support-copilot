@@ -25,12 +25,13 @@ def rag_chain(
         logger.info("retrieving relevant chunks\n")
         chunks = retrieve(
             query_embedding=query_embedding,
-            faiss_store=store,
-            chunks_path=chunks_path,
+            store=store,
             k=k
         )
 
-        context = "\n\n".join(chunks)
+        context = "\n\n".join(
+            [f"page {chunk['page']}\n{chunk['text']}" for chunk in chunks]
+        )
 
         # build prompt
         logger.info("building prompt\n")

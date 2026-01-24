@@ -20,7 +20,7 @@ def main():
     llm = OllamaLLM(model_name="llama3.1")
 
     # real query
-    question = "list all the accessories or spare parts of s7-1500?"
+    question = "tell about System and load power supply and its details"
 
     answer = rag_chain(
         question=question,

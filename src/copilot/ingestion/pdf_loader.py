@@ -18,11 +18,13 @@ def load_pdf(pdf_path: Path):
                 text = page.extract_text()
 
                 if text:
-                    pages.append(
-                        f"page {i + 1}\n{text}"
+                    pages.append({
+                        "text": text,
+                        "page": i + 1
+                    }
                     )
 
-        logger.info(f"pdf loaded, pages extracted: {len(pages)}\n")
+        logger.info(f"pdf loaded, total pages extracted: {len(pages)}\n")
         return pages
 
     except Exception as e:

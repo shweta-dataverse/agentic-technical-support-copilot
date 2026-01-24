@@ -1,21 +1,37 @@
-# splits text into smaller chunks
-# needed because llms cannot read big text
+# splits text into chunks with metadata
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from copilot.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-def split_text(pages):
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=800,
-        chunk_overlap=150
-    )
+def split_text(pages, source_name="s7-1500-manual"):
+    try:
+        logger.info("splitting text into chunks\n")
 
-    chunks = []
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=500,
+            chunk_overlap=100
+        )
 
-    for page in pages:
-        chunks.extend(splitter.split_text(page))
+        chunks = []
+        chunk_id = 0
 
-    logger.info("text split into chunks\n")
-    return chunks
+        for page in pages:
+            splits = splitter.split_text(page["text"])
+
+            for split in splits:
+                chunks.append({
+                    "text": split,
+                    "page": page["page"],
+                    "source": source_name,
+                    "chunk_id": chunk_id
+                })
+                chunk_id += 1
+
+        logger.info(f"text split into {len(chunks)} chunks\n")
+        return chunks
+
+    except Exception:
+        logger.error("text splitting failed\n", exc_info=True)
+        raise

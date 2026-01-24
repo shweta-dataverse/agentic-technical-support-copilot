@@ -19,11 +19,17 @@ store = FAISSStore(dimension=embedding_dim)
 store.load(FAISS_PATH)
 
 # user query
-query = "what is cpu?"
+query = "what are safety protocols in dangers and emergency?"
 query_embedding = embedder.embed([query])[0]
 
 # retrieve top 5 chunks
-results = retrieve(query_embedding, store, chunks_path=CHUNKS_PATH, k=5)
+results = retrieve(query_embedding, store, k=5)
+
+for c in results:
+    print(
+        f"page {c['page']} | chunk {c['chunk_id']}\n"
+        f"{c['text']}\n---\n"
+    )
 
 print("\nretrieved chunks:\n")
 for r in results:

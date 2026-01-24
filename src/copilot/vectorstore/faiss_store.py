@@ -1,6 +1,7 @@
-# stores embeddings for fast similarity search only
+# stores embeddings and chunk metadata
 
 import faiss
+import pickle
 from pathlib import Path
 from copilot.utils.logger import get_logger
 
@@ -11,38 +12,50 @@ class FAISSStore:
         try:
             logger.info("initializing faiss index\n")
             self.index = faiss.IndexFlatL2(dimension)
+            self.metadata = []  # stores chunk dicts
             logger.info("faiss index initialized\n")
 
         except Exception:
-            logger.error("failed to initialize faiss index\n", exc_info=True)
+            logger.error("faiss init failed\n", exc_info=True)
             raise
 
-    def add(self, embeddings):
+    def add(self, embeddings, chunks):
         try:
-            logger.info(f"adding {len(embeddings)} embeddings to faiss\n")
+            logger.info(f"adding {len(chunks)} embeddings\n")
+
             self.index.add(embeddings)
-            logger.info("embeddings added successfully\n")
+            self.metadata.extend(chunks)
+
+            logger.info("embeddings added\n")
 
         except Exception:
-            logger.error("failed to add embeddings to faiss\n", exc_info=True)
+            logger.error("adding embeddings failed\n", exc_info=True)
             raise
 
     def save(self, path: Path):
         try:
-            logger.info("saving faiss index to disk\n")
+            path.mkdir(parents=True, exist_ok=True)
+
             faiss.write_index(self.index, str(path / "index.faiss"))
-            logger.info("faiss index saved\n")
+
+            with open(path / "metadata.pkl", "wb") as f:
+                pickle.dump(self.metadata, f)
+
+            logger.info("faiss store saved\n")
 
         except Exception:
-            logger.error("failed to save faiss index\n", exc_info=True)
+            logger.error("faiss save failed\n", exc_info=True)
             raise
 
     def load(self, path: Path):
         try:
-            logger.info("loading faiss index from disk\n")
             self.index = faiss.read_index(str(path / "index.faiss"))
-            logger.info("faiss index loaded\n")
+
+            with open(path / "metadata.pkl", "rb") as f:
+                self.metadata = pickle.load(f)
+
+            logger.info("faiss store loaded\n")
 
         except Exception:
-            logger.error("failed to load faiss index\n", exc_info=True)
+            logger.error("faiss load failed\n", exc_info=True)
             raise
