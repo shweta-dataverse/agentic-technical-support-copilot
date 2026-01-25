@@ -1,6 +1,6 @@
-# retrieval augmented generation chain
+# retrieval augmented generation chain using hybrid retriever
 
-from copilot.vectorstore.retriever import retrieve
+from copilot.vectorstore.hybrid_retriever import HybridRetriever
 from copilot.llm.prompts import build_prompt
 from copilot.utils.logger import get_logger
 
@@ -8,42 +8,39 @@ logger = get_logger(__name__)
 
 def rag_chain(
     question: str,
-    embedder,
-    store,
-    chunks_path,
+    hybrid_retriever: HybridRetriever,
     llm,
-    k: int = 5
+    k: int = 5,
+    alpha: float = 0.5
 ) -> str:
+    """
+    generate answer using hybrid retrieval + llm
+    """
+
     try:
-        logger.info("starting rag pipeline\n")
+        logger.info("starting rag pipeline")
 
-        # embed question
-        logger.info("embedding user question\n")
-        query_embedding = embedder.embed([question])[0]
+        # retrieve top-k chunks using hybrid retriever
+        logger.info("retrieving relevant chunks")
+        retrieved_chunks = hybrid_retriever.retrieve(question, k=k, alpha=alpha)
 
-        # retrieve context
-        logger.info("retrieving relevant chunks\n")
-        chunks = retrieve(
-            query_embedding=query_embedding,
-            store=store,
-            k=k
-        )
-
+        # combine retrieved chunks into context
         context = "\n\n".join(
-            [f"page {chunk['page']}\n{chunk['text']}" for chunk in chunks]
+            [f"page {c['page']} | chunk {c['chunk_id']}\n{c['text']['text']}" 
+             for c in retrieved_chunks]
         )
 
-        # build prompt
-        logger.info("building prompt\n")
+        # build prompt with question + context
+        logger.info("building prompt")
         prompt = build_prompt(context, question)
 
-        # generate answer
-        logger.info("generating answer from llm\n")
+        # generate answer from llm
+        logger.info("generating answer from llm")
         answer = llm.generate(prompt)
 
-        logger.info("rag pipeline completed\n")
+        logger.info("rag pipeline completed")
         return answer
 
     except Exception:
-        logger.error("rag pipeline failed\n", exc_info=True)
+        logger.error("rag pipeline failed", exc_info=True)
         raise

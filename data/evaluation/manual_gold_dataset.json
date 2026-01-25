@@ -1,0 +1,104 @@
+[
+    {
+        "query": "installation of s7-1500 automation system and its rules",
+        "expected_ids": [
+            500,
+            990,
+            101,
+            1040,
+            1045
+        ],
+        "pages": [
+            87,
+            167,
+            12,
+            179,
+            180
+        ]
+    },
+    {
+        "query": "asynchronous instructions in program execution",
+        "expected_ids": [
+            1362,
+            1368,
+            1363,
+            1364,
+            1376
+        ],
+        "pages": [
+            262,
+            263,
+            262,
+            262,
+            264
+        ]
+    },
+    {
+        "query": "basic information on cyber security",
+        "expected_ids": [
+            273,
+            274,
+            263,
+            275,
+            283
+        ],
+        "pages": [
+            44,
+            44,
+            43,
+            45,
+            46
+        ]
+    },
+    {
+        "query": "Hardware configuration of the S7-1500 automation system",
+        "expected_ids": [
+            500,
+            53,
+            2040,
+            1736,
+            101
+        ],
+        "pages": [
+            87,
+            7,
+            408,
+            338,
+            12
+        ]
+    },
+    {
+        "query": "Extended temperature range and installation altitude",
+        "expected_ids": [
+            2162,
+            217,
+            2194,
+            2202,
+            2190
+        ],
+        "pages": [
+            438,
+            34,
+            445,
+            447,
+            444
+        ]
+    },
+    {
+        "query": "Shipping and storage conditions for system modules",
+        "expected_ids": [
+            2108,
+            2109,
+            174,
+            93,
+            960
+        ],
+        "pages": [
+            422,
+            422,
+            27,
+            10,
+            162
+        ]
+    }
+]
