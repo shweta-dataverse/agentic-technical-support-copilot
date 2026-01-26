@@ -18,6 +18,8 @@ Requires-Dist: uvicorn>=0.30.0
 Requires-Dist: streamlit>=1.36.0
 Requires-Dist: ragas>=0.1.9
 Requires-Dist: pydantic-settings>=2.3.0
+Requires-Dist: rank-bm25>=0.2.2
+Requires-Dist: rouge-score>=0.1.2
 Provides-Extra: dev
 Requires-Dist: pytest>=8.2.0; extra == "dev"
 Requires-Dist: ipykernel>=6.29.0; extra == "dev"
