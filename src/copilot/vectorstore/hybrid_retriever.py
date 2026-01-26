@@ -15,8 +15,18 @@ class HybridRetriever:
 
         vector_ids = list(vec_ids[0])
 
+        vector_ids = [
+            int(i) for i in vec_ids[0]
+            if i != -1 and i < len(self.faiss.metadata)
+        ]
+
         # keyword search
         bm25_ids = self.bm25.search(query, k)
+
+        bm25_ids = [
+            int(i) for i in self.bm25.search(query, k)
+            if i < len(self.faiss.metadata)
+        ]
 
         # merge + score
         score_map = {}

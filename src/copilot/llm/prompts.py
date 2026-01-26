@@ -20,7 +20,7 @@ Question:
 {question}
 
 Answer:
-"""  # note the newline after "Answer:" for cleaner completion
+""" 
 
 def build_prompt(context: str, question: str) -> str:
     """
