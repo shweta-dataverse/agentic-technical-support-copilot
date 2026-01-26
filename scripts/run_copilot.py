@@ -1,39 +1,22 @@
-from pathlib import Path
-from copilot.ingestion.embedder import Embedder
-from copilot.vectorstore.faiss_store import FAISSStore
-from copilot.llm.model import OllamaLLM
-from copilot.llm.chains import rag_chain
+from copilot.workflows.jira_workflow import build_jira_graph
+from copilot.utils.logger import get_logger
 
-FAISS_PATH = Path("data/processed/faiss")
-CHUNKS_PATH = Path("data/processed/chunks")
+logger = get_logger(__name__)
 
 def main():
-    # init embedder
-    embedder = Embedder()
-    dim = embedder.embed(["test"]).shape[1]
+    jira_graph = build_jira_graph()
 
-    # load faiss
-    store = FAISSStore(dimension=dim)
-    store.load(FAISS_PATH)
+    ticket = {
+        "ticket_id": "S7-1200-001",
+        "title": "Hardware Configuration Inconsistent: Startup Inhibit 0x2521",
+        "description": "CPU refuses to enter RUN mode after hardware replacement..."
+    }
 
-    # init llm
-    llm = OllamaLLM(model_name="llama3.1")
+    result = jira_graph.invoke({"ticket": ticket})
 
-    # real query
-    question = "tell about System and load power supply and its details"
+    logger.info("\n=== FINAL RESOLUTION ===\n")
+    logger.info(result["resolution"])
 
-    answer = rag_chain(
-        question=question,
-        embedder=embedder,
-        store=store,
-        llm=llm,
-        chunks_path=CHUNKS_PATH,
-        k=5
-    )
-
-    print("\nfinal answer:\n")
-    print(answer)
-    print("\n")
 
 if __name__ == "__main__":
     main()
