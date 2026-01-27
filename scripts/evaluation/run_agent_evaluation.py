@@ -9,7 +9,7 @@ import json
 
 logger = get_logger(__name__)
 
-EVAL_CSV_PATH = Path("data/evaluation/ticket_evaluation_data.csv")
+EVAL_CSV_PATH = Path("data/evaluation/ticket_evaluation_data1.csv")
 
 def run_agent_evaluation():
     """
@@ -25,7 +25,7 @@ def run_agent_evaluation():
     queries = [
         {
             "question": row["description"],
-            "expected_answer": row["actual_resolution"],
+            "actual_answer": row["actual_resolution"],
             "predicted_answer": row["predicted_resolution"]
         }
         for _, row in df.iterrows()
@@ -42,8 +42,10 @@ def run_agent_evaluation():
         results = evaluate_generation(
             queries=queries,
             pred_key="predicted_answer",
-            gold_key="expected_answer"
+            gold_key="actual_answer"
         )
+
+        #print("\n\n [debug] evaluation results:\n", results)
 
         # log aggregate metrics
         mlflow.log_metrics({

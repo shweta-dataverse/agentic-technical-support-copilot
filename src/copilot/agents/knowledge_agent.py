@@ -37,7 +37,7 @@ class KnowledgeAgent:
 
         logger.info("knowledge agent initialized\n")
 
-    def retrieve(self, query, k=5, alpha=0.5):
+    def retrieve(self, query, k=3, alpha=0.5):
         # retrieve relevant knowledge and generate answer
         logger.info(f"retrieving knowledge for query: {query}\n")
 

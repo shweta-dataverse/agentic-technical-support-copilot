@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/shwetabambal/Documents/myrepos/agentic-technical-support-copilot/mlruns/414662907454177518/9527f000bf2d4f4d87340cf2303b3191/artifacts
+end_time: 1769524329159
+entry_point_name: ''
+experiment_id: '414662907454177518'
+lifecycle_stage: active
+run_id: 9527f000bf2d4f4d87340cf2303b3191
+run_name: run_generation_eval
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1769524328156
+status: 4
+tags: []
+user_id: shwetabambal

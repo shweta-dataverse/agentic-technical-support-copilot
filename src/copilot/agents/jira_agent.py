@@ -41,8 +41,8 @@ class JiraAgent:
 
         # check if resolution exists
         if ticket.get("resolution_summary"):
-            logger.info("ticket already resolved\n")
-            return ticket["resolution_summary"]
+            logger.info("=====\n\nticket already resolved, no prediction generated=====\n\n")
+            return ""
 
         query = f"{ticket['title']} \n {ticket['description']}"
 

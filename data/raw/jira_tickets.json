@@ -60,7 +60,7 @@
     "priority": "high",
     "component": "cpu",
     "tags": ["ob80", "cycle_time", "watchdog"],
-    "resolution_summary": null,
+    "resolution_summary": "the cpu entered stop mode because the user program execution time exceeded the configured 150ms cycle monitoring time. to fix this, optimize the program code to reduce scan time, distribute heavy processing over several cycles, or increase the maximum cycle time in the cpu hardware properties. if ob 80 is not present or the overflow occurs twice, the cpu will stop by default.",
     "created_at": "2024-05-14T10:00:00Z",
     "updated_at": "2024-05-14T15:00:00Z"
   },
@@ -73,7 +73,7 @@
     "priority": "high",
     "component": "cpu",
     "tags": ["opc_ua", "certificate", "nat"],
-    "resolution_summary": "",
+    "resolution_summary": "the opc ua connection failed with 'badcertificateuriinvalid' because the application uri or subject alternative name (san) in the plc's server certificate did not match the endpoint used by the scada client, likely due to nat. the resolution is to update the cpu hardware configuration in tia portal to include the correct external ip/hostname in the certificate settings, re-generate the certificate, and re-deploy to the plc.",
     "created_at": "2024-05-15T09:00:00Z",
     "updated_at": "2024-05-15T14:00:00Z"
   },
@@ -86,7 +86,7 @@
     "priority": "medium",
     "component": "et200sp",
     "tags": ["wire_break", "analog_input", "0xA202"],
-    "resolution_summary": "Identified a loose terminal screw at the junction box. Tightening the connection cleared the 0xA202 error.",
+    "resolution_summary": "the analog input channel reported a wire break (0xA202) and an overflow value of 32767 because the current loop was interrupted. the ground truth resolution is to inspect and secure all wiring terminals between the sensor and the plc, verify the sensor's power supply, and ensure the loop current is within the 4-20 ma range. tightening loose connections or replacing damaged cables resolves the diagnostic interrupt.",
     "created_at": "2024-05-16T08:00:00Z",
     "updated_at": "2024-05-16T10:00:00Z"
   },
@@ -99,7 +99,7 @@
     "priority": "medium",
     "component": "cpu",
     "tags": ["motion_control", "16#8001", "sw_limit"],
-    "resolution_summary": "",
+    "resolution_summary": "the motion control error 16#8001 occurred because the axis reached the lower software limit switch during a move operation. the ground truth resolution is to verify the target position at the mc_moveabsolute instruction, ensure the axis technology object configuration has the correct software limit values, and perform an mc_reset followed by an mc_home if necessary to synchronize the coordinate system.",
     "created_at": "2024-05-17T10:00:00Z",
     "updated_at": "2024-05-17T13:00:00Z"
   },
@@ -112,7 +112,7 @@
     "priority": "high",
     "component": "tia_portal",
     "tags": ["alm", "licensing", "service_failure"],
-    "resolution_summary": "",
+    "resolution_summary": "the connection failure to the automation license manager (alm) occurred because the alm background service was not running or port 4410 was blocked. the ground truth resolution is to set the 'automation license manager' service to 'automatic' and 'start' it via windows services. additionally, verify that firewall settings allow communication for almservice.exe to ensure tia portal can validate licenses during software startup.",
     "created_at": "2024-05-18T08:00:00Z",
     "updated_at": "2024-05-18T10:00:00Z"
   },
@@ -125,7 +125,7 @@
     "priority": "medium",
     "component": "cpu",
     "tags": ["load_memory", "program_card", "block_limit"],
-    "resolution_summary": "",
+    "resolution_summary": "the 'insufficient load memory' error occurs when the project size exceeds the internal load memory of the cpu, as the system does not automatically overflow into the 4mb program card without proper configuration. the ground truth resolution is to perform a full software rebuild to optimize the project size, verify the memory card is set as a program card to replace internal load memory, and ensure the total number of blocks remains within the cpu-specific hardware limits.",
     "created_at": "2024-05-19T13:00:00Z",
     "updated_at": "2024-05-19T16:00:00Z"
   }

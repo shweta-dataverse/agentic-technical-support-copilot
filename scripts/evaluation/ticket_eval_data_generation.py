@@ -6,7 +6,7 @@ from copilot.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-TICKETS_JSON_PATH = "data/raw/jira_tickets.json"
+TICKETS_JSON_PATH = "data/evaluation/ticket_ground_truth.json"
 TICKET_EVAL_CSV = "data/evaluation/ticket_evaluation_data.csv"
 
 def generate_ticket_eval_data():
@@ -31,9 +31,11 @@ def generate_ticket_eval_data():
 
         # run agent to get predicted resolution
         predicted_response = jira_graph.invoke({"ticket": ticket})
+
+        logger.info(f"\n\n===predicted_response:  {predicted_response} ===")
         predicted_resolution = predicted_response.get("resolution", "")
 
-        logger.info(f"predicted resolution: {predicted_resolution}")
+        logger.info(f"\n\npredicted resolution: {predicted_resolution}")
 
         # prepare row for CSV
         row = {

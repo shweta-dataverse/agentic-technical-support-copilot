@@ -10,7 +10,7 @@ def rag_chain(
     question: str,
     hybrid_retriever: HybridRetriever,
     llm,
-    k: int = 5,
+    k: int = 3,
     alpha: float = 0.5
 ) -> str:
     """

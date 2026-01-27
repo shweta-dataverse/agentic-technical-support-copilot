@@ -6,7 +6,7 @@ class HybridRetriever:
         self.bm25 = bm25_store
         self.embedder = embedder
 
-    def retrieve(self, query, k=5, alpha=0.5):
+    def retrieve(self, query, k=3, alpha=0.5):
         # vector search
         q_emb = self.embedder.embed([query])[0]
         _, vec_ids = self.faiss.index.search(

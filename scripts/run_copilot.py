@@ -16,8 +16,8 @@ def main():
     # example ticket to test the workflow
     ticket = {
         "ticket_id": "S7-1200-001",
-        "title": "hardware configuration inconsistent: startup inhibit 0x2521",
-        "description": "cpu refuses to enter run mode after hardware replacement..."
+        "title": "Hardware Configuration Inconsistent: Startup Inhibit 0x2521",
+        "description": "After a hardware replacement in Cabinet 3, the CPU refuses to enter RUN mode. Diagnostic buffer reports 'Pending startup inhibit: HW configuration inconsistent (TIA portal activity).' The physical unit is marked V4.4, but the offline project is configured for V4.2. Per manual section 6.5, the device type must be changed in the device configuration to match the physical MLFB 6ES7 214-1AG40-0XB0.[3]"
     }
 
     # invoke the langgraph workflow
