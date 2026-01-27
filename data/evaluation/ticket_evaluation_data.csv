@@ -1,0 +1,240 @@
+ticket_id,title,description,status,component,tags,predicted_resolution,actual_resolution
+S7-1200-001,Hardware Configuration Inconsistent: Startup Inhibit 0x2521,"After a hardware replacement in Cabinet 3, the CPU refuses to enter RUN mode. Diagnostic buffer reports 'Pending startup inhibit: HW configuration inconsistent (TIA portal activity).' The physical unit is marked V4.4, but the offline project is configured for V4.2. Per manual section 6.5, the device type must be changed in the device configuration to match the physical MLFB 6ES7 214-1AG40-0XB0.[3]",closed,cpu,"['startup_inhibit', '0x2521', 'configuration']","**Resolution for ET 200SP Station Failure: Potential Group Configuration Error (Ticket ID: [Insert Ticket Number])**
+
+Based on our analysis and knowledge from manuals, we have identified that the issue is caused by an inconsistent hardware configuration between the physical CPU and the offline project. Specifically, the physical unit is configured for firmware V4.4, while the offline project is still set for firmware V4.2.
+
+**Immediate Actions:**
+
+1. **Update Offline Project Firmware Version**: Open the offline TIA Portal project and update the device type to match the physical MLFB 6ES7 214-1AG40-0XB0 (V4.4). This can be done by:
+	* Opening the offline project in TIA Portal.
+	* Checking the ""Device Type"" parameter in the device configuration.
+	* Updating the device type to V4.4.
+	* Confirming changes by saving the project.
+2. **Download Updated Hardware Configuration**: Connect to the CPU and select ""Download to Device > Hardware Configuration"". Verify that the device type is updated to V4.4 during the download process.
+
+**Verification Steps:**
+
+1. After completing the above steps, verify that the CPU has successfully downloaded the updated hardware configuration.
+2. Check the project's status in TIA Portal to ensure it has been updated correctly.
+
+**Post-Resolution Verification and Testing:**
+
+* Verify that the CPU can now enter RUN mode without issues.
+* Test the ET 200SP station with various inputs and outputs to ensure correct functionality.
+
+**Timeline for Completion:**
+
+We estimate this resolution will take approximately [Insert Timeframe] to complete, depending on the complexity of your specific setup and our ability to troubleshoot any additional issues that may arise.
+
+Please confirm receipt of these instructions and provide an estimated completion date. If you encounter any difficulties or need further clarification, please do not hesitate to contact us.
+
+**References:**
+
+[3] page 277 | chunk 1445
+
+Please let me know if this meets your requirements!",
+S7-1200-002,Modbus TCP Timeout: MB_CLIENT Status 80C8,The communication with the remote power meter (IP: 192.168.0.50) has failed. The MB_CLIENT instruction returns error code 80C8. Network ping is successful from the engineering laptop.,resolved,cpu,"['modbus_tcp', '80C8', 'timeout']","**Resolution Draft**
+
+Based on the provided knowledge from manuals and analysis of similar tickets, I have identified potential causes for the Cycle Time Violation: OB 80 Triggered by Heavy Math issue. The following steps outline a plan to resolve this problem:
+
+1. **Verify IP Address and Network Reachability**
+	* Check that the IP address of the remote power meter (192.168.0.50) is correct and reachable in the network.
+	* Verify connectivity between the PLC and the remote device using tools such as Ping or Telnet.
+2. **TCP Handshake Issue Investigation**
+	* Review the PROFIBUS communication settings on the CM 1542-5/CP 1542-5 modules to ensure proper configuration.
+	* Check for any errors in the Modbus TCP handshake process, including incorrect device IDs, faulty device addresses, or mismatched communication protocols.
+3. **Power Supply and Backplane Bus Verification**
+	* Ensure that the power fed into the backplane bus is sufficient for the modules involved in the communication (CM 1542-5/CP 1542-5).
+4. **Remote Device Configuration and Accessibility Check**
+	* Verify that the remote device is properly configured and accessible via Modbus TCP.
+	* Check for any configuration issues, such as incorrect IP addresses or faulty settings.
+
+**Additional Actions**
+
+If the above steps do not resolve the issue, further investigation may be required:
+
+1. Review PLC configuration and CPU load to identify potential causes of heavy math.
+2. Analyze communication data logs to detect any anomalies or errors.
+3. Consult with Siemens experts or seek additional assistance from the support team.
+
+**Ticket Status**
+
+I recommend marking this ticket as ""in_progress"" while these steps are being taken. If further investigation is required, please provide an update on the expected resolution time and any necessary next steps.
+
+Please acknowledge receipt of this draft and indicate your approval to proceed with the outlined plan.",
+S7-1200-003,ET 200SP Station Failure: Potential Group Configuration Error,Slot 4 on the distributed I/O rack is not receiving power. Diagnostic buffer reports 'Hardware component not available due to a parameter assignment error'.,closed,et200sp,"['potential_group', 'baseunit', 'power_fault']",Enabled 'New Potential Group' in TIA Portal hardware config for Slot 4 to match the light-colored BaseUnit installation.,Enabled 'New Potential Group' in TIA Portal hardware config for Slot 4 to match the light-colored BaseUnit installation.
+S7-1200-004,TMAIL_C: DNS Resolution Failure 80D3,Automated production reports via email are failing. The TMAIL_C instruction block returns status 80D3 when using the MailServerAddress 'smtp.office365.com'.,resolved,cpu,[],Configured the DNS server IP (8.8.8.8) and Gateway IP in the CPU hardware properties under TIA Portal.,Configured the DNS server IP (8.8.8.8) and Gateway IP in the CPU hardware properties under TIA Portal.
+S7-1200-005,Cycle Time Violation: OB 80 Triggered by Heavy Math,The PLC intermittently enters STOP mode with a cycle time overflow. Diagnostic buffer shows 'Maximum cycle time exceeded'. Current limit is set to 150ms.,in_progress,cpu,"['ob80', 'cycle_time', 'watchdog']","**Resolution for Jira Ticket: Motion Control: ErrorID 16#8001 Low SW Limit**
+
+Based on the provided information and knowledge from Siemens manuals, we will resolve this issue in the following steps:
+
+**Step 1: Verify Current Cycle Time Limit**
+
+* Open the STEP 7 programming software connected to the S7-1500 PLC.
+* Navigate to the ""Config"" menu and select ""Cycle Time"" (Page 340 | Chunk 1749).
+* Verify that the current cycle time limit is set correctly. In this case, it should be 150ms.
+
+**Step 2: Investigate Heavy Math Operations**
+
+* Review the program for any heavy math operations that could be causing the cycle time to exceed.
+* Check if there are any complex calculations or data transfers between devices that can be optimized.
+* Use the STEP 7 software's built-in tools, such as the ""Cycle Time Analyzer"" (Page 260 | Chunk 1351), to identify potential bottlenecks.
+
+**Step 3: Optimize Program**
+
+* Review the program for any unnecessary or inefficient code that could contribute to cycle time overflow.
+* Reorder instructions and use more efficient algorithms where possible.
+* Reduce the number of data transfers between devices by optimizing communication settings.
+
+**Step 4: Adjust Cycle Time Limit (if necessary)**
+
+* If optimization efforts do not improve performance, consider adjusting the maximum cycle time limit in the PLC's configuration to accommodate the actual processing requirements.
+
+**Action Items**
+
+1. Verify current cycle time limit and adjust if necessary.
+2. Investigate heavy math operations and optimize program code.
+3. Review communication settings and reduce data transfers between devices.
+4. Monitor system performance after implementing changes.
+
+**Next Steps**
+
+* The customer will provide feedback on the effectiveness of these steps and report any further issues.
+* We will continue to monitor the system's performance and make adjustments as necessary to resolve this issue.
+
+**Ticket Status: In Progress**
+
+Please let me know if you have any questions or need further clarification on these steps.",
+S7-1200-006,OPC UA: BadCertificateUriInvalid Error on Connect,SCADA client cannot establish a secure connection to the PLC OPC UA server. Client logs report 'BadCertificateUriInvalid'.,resolved,cpu,"['opc_ua', 'certificate', 'nat']","**Resolution Draft: ALM Connection Failure: Software Startup Blocked**
+
+Based on the provided information and similar tickets, I've drafted a clear and actionable resolution to address the issue:
+
+**Summary:** The software startup is blocked due to an ALM connection failure. To resolve this issue, we'll focus on verifying the server's certificate and ensuring correct server ID verification.
+
+**Resolution Steps:**
+
+1. **Verify Server Certificate**:
+	* Check if the certificate is valid and has not expired (refer to page 269 | chunk 1399).
+	* Verify that the certificate's URI matches the one expected by the client.
+2. **Ensure Correct Server ID Verification**:
+	* Confirm that the server's fingerprint matches the one expected by the client.
+3. **Validate Identity and FQDN Checks**:
+	* Check if the subject alternative name, FQDN, or IPv4 check is correct for the server.
+
+**Action Plan:**
+
+1. Review the server's certificate and verify its validity and URI.
+2. Confirm that the server's fingerprint matches the expected value.
+3. Validate identity and FQDN checks to ensure they are correct for the server.
+
+**Timeline:**
+
+* Within 2 hours: Complete steps 1-3 and provide an update on the status.
+* If further assistance is required, escalate the issue to technical support for additional guidance.
+
+**Next Steps:**
+
+If these resolution steps do not resolve the issue, we will:
+
+1. Investigate additional possible causes (e.g., verification against the chain of trust, certificate not valid or expired).
+2. Consult additional resources or contact technical support for assistance.
+
+Please review and acknowledge this draft before proceeding with the implementation plan. If any changes are required, please let me know.
+
+**Acknowledgement:**
+
+Please confirm that you have reviewed and acknowledged this resolution draft by responding to this message with a ""Acknowledge"" or a summary of your understanding.
+
+I'm here to assist if you need further clarification or guidance on implementing these resolution steps.",
+S7-1200-007,SM 1231 AI: Wire Break Detected 0xA202,Analog input channel 0 for the pressure transmitter is reporting 32767. Diagnostic LED (MAINT) is solid yellow.,closed,et200sp,"['wire_break', 'analog_input', '0xA202']",Identified a loose terminal screw at the junction box. Tightening the connection cleared the 0xA202 error.,Identified a loose terminal screw at the junction box. Tightening the connection cleared the 0xA202 error.
+S7-1200-008,Motion Control: ErrorID 16#8001 Low SW Limit,Axis_1 (Linear Slider) faulted during positioning. MC_MoveAbsolute returns Error=TRUE and ErrorID=16#8001.,resolved,cpu,"['motion_control', '16#8001', 'sw_limit']","Based on the provided information and knowledge from manuals, I'll assist in resolving the issue with the OPC UA connection error on Connect. However, it seems that this JIRA ticket has a similar title to another resolved ticket (`S7-1200-006`), indicating that this might not be a new issue.
+
+That being said, let's try to draft a clear and actionable resolution based on the provided information:
+
+**Resolution:**
+
+To resolve the ""BadCertificateUriInvalid Error on Connect"" with OPC UA on your SIMATIC S7-1500 automation system:
+
+1. **Verify OPC UA configuration**: Check if the OPC UA server is properly configured, including the certificate settings. Ensure that the certificate URI and other relevant parameters are correctly set in the system.
+2. **Check for invalid certificates**: Verify that there are no issues with the certificates used for OPC UA communication. This includes checking the validity dates, revocation status, and correct issuance of certificates.
+3. **Update or reconfigure OPC UA settings**: If the above steps do not resolve the issue, try updating or reconfiguring the OPC UA settings on both the S7-1500 CPU and the client device. Refer to pages 341 | chunk 1752 and 138 | chunk 831 in the manuals for more information on configuring OPC UA.
+4. **Consult previous similar tickets**: Review the resolved ticket (`S7-1200-006`) with a similar title, as it may provide additional insights or solutions that could be applied to this issue.
+
+**Additional steps:**
+
+If none of these steps resolve the issue, we may need to:
+
+* Collect logs and diagnostic data from the S7-1500 CPU and OPC UA client device.
+* Verify if there are any firmware updates available for the S7-1500 CPU or related modules.
+* Consult with Siemens support team for further assistance.
+
+Please confirm if this resolution aligns with your expectations, and let me know if you'd like to proceed with collecting additional information or implementing the suggested steps.",
+S7-1200-009,ALM Connection Failure: Software Startup Blocked,TIA Portal V16 refuses to launch on Engineer Workstation 2. Error message: 'Automation License Manager could not connect to server'.,closed,tia_portal,"['alm', 'licensing', 'service_failure']","**Resolution: OPC UA: BadCertificateUriInvalid Error on Connect**
+
+Based on the provided information and similar tickets, we will follow the step-by-step resolution to resolve the issue.
+
+### Step 1: Check Online Connection to UMC Server
+ Ensure that Engineer Workstation 2 has an online connection to the UMC server. To do this:
+
+* Verify that the network settings on Engineer Workstation 2 allow a connection to the UMC server's IP address.
+* Ping the UMC server's IP address from Engineer Workstation 2 to confirm connectivity.
+
+### Step 2: Configure Roles and Assign Function Rights
+ Confirm that the required roles have been configured, and function rights assigned in TIA Portal's editor for users and roles. To do this:
+
+* Open TIA Portal V16 on Engineer Workstation 2.
+* Go to **Editor > User Management** (page 288 | chunk 1509).
+* Verify that the necessary roles are created and function rights assigned.
+
+### Step 3: Check IP Address Reachability
+ Ensure that the IP address of the UMC server is reachable due to missing routing information. To do this:
+
+* Run a ping command from Engineer Workstation 2 to the UMC server's IP address.
+* If the ping fails, check the network settings and ensure that the necessary routes are configured.
+
+### Troubleshooting Steps (If Required)
+If none of the above steps resolve the issue, perform additional troubleshooting steps as follows:
+
+* Check the ALM logs for any errors related to certificate validation.
+* Verify that the certificate used by the UMC server is valid and has not expired.
+* If using a proxy server, ensure it is configured correctly.
+
+### Escalation (If Required)
+If the issue persists after attempting all troubleshooting steps, please escalate to the next level of support with the following information:
+
+* Provide detailed logs from the ALM and TIA Portal V16.
+* IP address of the UMC server.
+* Version numbers of TIA Portal V16 and ALM.
+
+**Action Items:**
+
+1. Check online connection to UMC server
+2. Verify role configuration and function rights assignment in TIA Portal's editor
+3. Ensure IP address reachability to UMC server
+
+By following these steps, we should be able to resolve the issue of OPC UA: BadCertificateUriInvalid Error on Connect. Please provide feedback or ask questions if further assistance is required.",
+S7-1200-010,Memory Overload: Program Card vs Load Memory,Compile fails with 'Insufficient load memory on the target' despite using a 4MB program card.,resolved,cpu,"['load_memory', 'program_card', 'block_limit']","**Resolution**
+
+Based on the analysis and knowledge from manuals, it is recommended to investigate and resolve the Cycle Time Violation: OB 80 Triggered by Heavy Math issue. To do this:
+
+1. **Review Program Size and Load Memory Configuration**: Ensure that the program being compiled fits within the available load memory. Verify the data work memory capacity during operation (1.5 MB to 150 MB) and compare it with the actual program size.
+2. **Re-evaluate CPU Configuration**: Check if the CPU configuration is set up correctly, ensuring that sufficient load memory is allocated for the program.
+3. **Optimize Program Code**: If the program size exceeds the available load memory, consider optimizing the code to reduce its size or implement additional addressing techniques (if supported by the CPU).
+4. **Verify Math Operations**: Inspect the math operations within the program and check if they can be optimized or replaced with more efficient algorithms.
+5. **Monitor System Performance**: Continuously monitor system performance during operation to detect any future memory-related issues.
+
+**Actionable Steps**
+
+* Provide a detailed analysis of the program size and load memory configuration
+* Update the CPU configuration to allocate sufficient load memory for the program (if necessary)
+* Implement optimizations in the program code to reduce its size (if possible)
+
+**Next Steps**
+
+To ensure timely resolution, it is recommended that the customer provide additional information about:
+
+* The specific program being compiled and its exact size
+* The current CPU configuration and settings
+* Any previous attempts made to resolve the issue
+
+With this information, we can further investigate the issue and provide a more detailed solution.",
