@@ -23,6 +23,8 @@ PDF Manuals → Chunking → Embeddings → FAISS
 
 Jira Tickets → PostgreSQL → Embeddings → FAISS
 
+```bash
+
 User Query / Ticket
 ↓
 Hybrid Retrieval (FAISS + BM25)
@@ -34,7 +36,7 @@ Synthesis Agent (LLM)
 Final Resolution
 ↓
 Evaluation + MLflow Tracking
-
+```
 
 ---
 
