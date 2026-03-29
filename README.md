@@ -79,6 +79,8 @@ User Query → Embedding → Retrieve Top-K Chunks → LLM → Answer
 
 ### Phase 2: Agentic Workflow
 
+```bash
+
 New Jira Ticket
 ↓
 Jira Agent
@@ -88,15 +90,18 @@ Jira Agent
 Synthesis Agent
 ↓
 Final Resolution
-
+```
 ---
 
 ### Phase 3: Hybrid Retrieval
 
+```bash
 Query
 ├─→ FAISS (semantic)
 ├─→ BM25 (keyword)
 └─→ Merge + Re-rank
+
+```
 
 ✅ Improves:
 - Precision
@@ -106,6 +111,8 @@ Query
 ---
 
 ### Phase 4: Database Integration
+
+```bash
 
 Jira API → PostgreSQL
 ↓
@@ -117,6 +124,7 @@ Retrieval + Resolution
 ↓
 Store AI Output
 
+```
 ---
 
 ## 📊 Evaluation Strategy
