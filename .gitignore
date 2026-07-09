@@ -215,3 +215,14 @@ logs/
 data/processed/
 *.faiss
 *.pkl
+
+# ---------------------------------------------------------------------------
+# terraform
+# ---------------------------------------------------------------------------
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+crash.log
