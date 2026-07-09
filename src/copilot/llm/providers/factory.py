@@ -20,6 +20,11 @@ def _build(settings: Settings) -> LLMProvider:
 
         return AzureOpenAIProvider(settings)
 
+    if provider == "azure_foundry":
+        from copilot.llm.providers.azure_foundry import AzureFoundryProvider
+
+        return AzureFoundryProvider(settings)
+
     if provider == "anthropic":
         from copilot.llm.providers.anthropic_provider import AnthropicProvider
 

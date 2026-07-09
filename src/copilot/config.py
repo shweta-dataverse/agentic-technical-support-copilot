@@ -30,19 +30,26 @@ class Settings(BaseSettings):
 
     # ------------------------------------------------------------------
     # llm provider selection
-    #   azure     -> Azure OpenAI  (primary; GDPR/EU data residency)
-    #   anthropic -> Claude API    (config-switchable secondary)
-    #   ollama    -> local models  (free/offline fallback)
+    #   azure         -> Azure OpenAI Service    (GDPR/EU data residency)
+    #   azure_foundry -> Azure AI Foundry models (Grok/Mistral/etc., serverless)
+    #   anthropic     -> Claude API              (config-switchable)
+    #   ollama        -> local models            (free/offline fallback)
     # ------------------------------------------------------------------
-    llm_provider: Literal["azure", "anthropic", "ollama"] = "azure"
+    llm_provider: Literal["azure", "azure_foundry", "anthropic", "ollama"] = "azure"
     llm_max_tokens: int = 1024
     llm_temperature: float = 0.2
 
-    # Azure OpenAI
+    # Azure OpenAI Service
     azure_openai_endpoint: str = ""
     azure_openai_api_key: str = ""
     azure_openai_api_version: str = "2024-10-21"
     azure_openai_deployment: str = "gpt-4o-mini"
+
+    # Azure AI Foundry (Models-as-a-Service, e.g. Grok, Mistral, Llama)
+    azure_foundry_endpoint: str = ""
+    azure_foundry_api_key: str = ""
+    # deployment/model name; leave blank if the endpoint serves a single model
+    azure_foundry_model: str = "grok-4-20-reasoning"
 
     # Anthropic (Claude)
     anthropic_api_key: str = ""

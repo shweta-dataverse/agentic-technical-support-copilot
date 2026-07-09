@@ -18,6 +18,16 @@ def test_anthropic_requires_api_key():
         _build(settings)
 
 
+def test_azure_foundry_requires_credentials():
+    settings = Settings(
+        llm_provider="azure_foundry",
+        azure_foundry_endpoint="",
+        azure_foundry_api_key="",
+    )
+    with pytest.raises(ValueError, match="Azure AI Foundry"):
+        _build(settings)
+
+
 def test_ollama_builds_without_credentials():
     settings = Settings(llm_provider="ollama", ollama_model="llama3.1")
     provider = _build(settings)
