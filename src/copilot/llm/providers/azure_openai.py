@@ -33,6 +33,11 @@ class AzureOpenAIProvider:
         )
         logger.info("azure openai provider initialized (deployment=%s)", self.model)
 
+    def _is_reasoning_model(self) -> bool:
+        # gpt-5 / o-series models take max_completion_tokens and reject
+        # custom temperature; gpt-4.x take max_tokens + temperature.
+        return self.model.startswith(("gpt-5", "o1", "o3", "o4"))
+
     def generate(
         self,
         prompt: str,
@@ -46,12 +51,16 @@ class AzureOpenAIProvider:
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": prompt})
 
-        completion = self._client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            max_tokens=max_tokens or self._default_max_tokens,
-            temperature=temperature if temperature is not None else self._default_temperature,
-        )
+        kwargs: dict = {"model": self.model, "messages": messages}
+        if self._is_reasoning_model():
+            kwargs["max_completion_tokens"] = max_tokens or self._default_max_tokens
+        else:
+            kwargs["max_tokens"] = max_tokens or self._default_max_tokens
+            kwargs["temperature"] = (
+                temperature if temperature is not None else self._default_temperature
+            )
+
+        completion = self._client.chat.completions.create(**kwargs)
 
         usage = completion.usage
         return LLMResponse(

@@ -42,8 +42,8 @@ class Settings(BaseSettings):
     # Azure OpenAI Service
     azure_openai_endpoint: str = ""
     azure_openai_api_key: str = ""
-    azure_openai_api_version: str = "2024-10-21"
-    azure_openai_deployment: str = "gpt-4o-mini"
+    azure_openai_api_version: str = "2024-12-01-preview"
+    azure_openai_deployment: str = "gpt-4.1-mini"
 
     # Azure AI Foundry (Models-as-a-Service, e.g. Grok, Mistral, Llama)
     azure_foundry_endpoint: str = ""

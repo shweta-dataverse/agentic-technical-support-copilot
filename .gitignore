@@ -216,6 +216,9 @@ data/processed/
 *.faiss
 *.pkl
 
+# personal interview prep — never publish
+docs/interview-prep.md
+
 # ---------------------------------------------------------------------------
 # terraform
 # ---------------------------------------------------------------------------
