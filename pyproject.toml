@@ -29,8 +29,6 @@ dependencies = [
     "langchain==1.2.7",
     "langchain-text-splitters==1.1.0",
     "langgraph==1.0.7",
-    "sentence-transformers==5.2.0",
-    "rank-bm25==0.2.2",
 
     # ingestion
     "pdfplumber==0.11.9",
@@ -53,9 +51,7 @@ dependencies = [
     "ragas==0.4.3",
     "rouge-score==0.1.2",
 
-    # legacy — still imported by the v1 modules being ported; removed with the
-    # retrieval-layer and UI steps
-    "faiss-cpu==1.13.2",
+    # ui (own container from the containerization step)
     "streamlit==1.53.1",
 ]
 
@@ -76,10 +72,6 @@ src = ["src", "tests"]
 extend-exclude = [
     "src/copilot/app.py",
     "src/copilot/agents",
-    "src/copilot/vectorstore",
-    "src/copilot/ingestion/pdf_loader.py",
-    "src/copilot/ingestion/text_splitter.py",
-    "src/copilot/ingestion/embedder.py",
     "src/copilot/evaluation",
     "src/copilot/workflows",
     "src/copilot/llm/model.py",
@@ -123,8 +115,6 @@ files = [
 [[tool.mypy.overrides]]
 module = [
     "azure.ai.inference.*",
-    "rank_bm25.*",
-    "faiss.*",
     "presidio_analyzer.*",
     "presidio_anonymizer.*",
     "pdfplumber.*",
