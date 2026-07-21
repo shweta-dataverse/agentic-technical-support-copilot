@@ -17,7 +17,9 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: |
+          pip install -e ".[dev]"
+          python -m spacy download en_core_web_sm
 
       - name: Lint (ruff)
         run: ruff check src tests

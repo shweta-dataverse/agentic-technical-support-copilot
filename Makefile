@@ -2,6 +2,7 @@
 
 install:
 	pip install -e ".[dev]"
+	python -m spacy download en_core_web_sm
 
 lint:
 	ruff check src tests
@@ -21,6 +22,9 @@ check-azure:
 
 search-indexes:
 	python scripts/create_search_indexes.py
+
+ingest:
+	python -m copilot.ingestion.cli data/raw/manuals
 
 up:
 	docker compose up --build

@@ -65,6 +65,15 @@ class Settings(BaseSettings):
     # embeddings — text-embedding-3-small on the Azure OpenAI resource
     # ------------------------------------------------------------------
     embedding_dim: int = 1536
+    embedding_batch_size: int = 64
+
+    # ------------------------------------------------------------------
+    # ingestion — chunking and quality gates
+    # ------------------------------------------------------------------
+    chunk_size: int = 1000
+    chunk_overlap: int = 150
+    chunk_min_chars: int = 40
+    ingest_max_reject_rate: float = 0.20
 
     # ------------------------------------------------------------------
     # Azure AI Search — hybrid retrieval indexes
