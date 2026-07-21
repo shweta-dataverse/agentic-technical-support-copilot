@@ -101,16 +101,18 @@ def test_full_graph_produces_grounded_resolution() -> None:
     assert state.guardrails is not None
     assert state.guardrails.passed and not state.guardrails.escalate
     assert state.total_cost_eur > 0
-    assert state.prompt_versions == {"triage": "1.0", "synthesis": "1.0"}
+    assert state.prompt_versions == {"triage": "1.0", "synthesis": "1.1"}
 
 
-def test_fabricated_citation_is_caught_and_escalated() -> None:
-    # cites page 999 which was never retrieved
+def test_fabricated_citation_is_dropped_and_escalated() -> None:
+    # cites page 999 which was never retrieved -> sanitized out; the lone step
+    # is left with no grounded citation, so the resolution escalates
     state = run_graph([TRIAGE_JSON, synthesis_json(page=999)])
     assert state.guardrails is not None
+    assert state.guardrails.fabricated_citations[0].page == 999
+    assert state.synthesis is not None and state.synthesis.citations == []  # dropped
     assert not state.guardrails.passed
     assert state.guardrails.escalate
-    assert state.guardrails.fabricated_citations[0].page == 999
 
 
 def test_low_confidence_escalates_even_with_valid_citations() -> None:

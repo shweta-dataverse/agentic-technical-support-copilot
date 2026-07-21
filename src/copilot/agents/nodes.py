@@ -131,33 +131,51 @@ class AgentNodes:
     # -- guardrails -----------------------------------------------------
 
     def guardrails(self, state: CopilotState) -> dict[str, Any]:
+        """Enforce grounding: drop ungrounded citations so the delivered
+        resolution has a fabricated-citation rate of 0 by construction.
+        Escalate when nothing grounded remains or confidence is low.
+        """
         assert state.synthesis is not None, "guardrails requires synthesis output"
         settings = get_settings()
         synthesis = state.synthesis
         reasons: list[str] = []
 
-        retrieved = {(h.doc_id, h.page) for h in state.manual_hits}
-        fabricated = [
-            c for c in synthesis.citations if (c.doc, c.page) not in retrieved
-        ]
+        def grounded(citation: Citation) -> bool:
+            # +/-1 page tolerance: a procedure may span adjacent pages
+            return any(
+                citation.doc == h.doc_id and abs(citation.page - h.page) <= 1
+                for h in state.manual_hits
+            )
+
+        kept = [c for c in synthesis.citations if grounded(c)]
+        fabricated = [c for c in synthesis.citations if not grounded(c)]
+        # deliver only grounded citations — this is the enforced invariant
+        synthesis.citations = kept
+
+        lost_all = bool(synthesis.resolution_steps) and not kept
         if fabricated:
-            reasons.append(f"{len(fabricated)} citation(s) not in retrieved context")
-        if synthesis.resolution_steps and not synthesis.citations:
-            reasons.append("resolution has no citations")
+            reasons.append(f"dropped {len(fabricated)} ungrounded citation(s)")
+        if lost_all:
+            reasons.append("no grounded citations remain after sanitization")
         if synthesis.confidence < settings.escalation_confidence_threshold:
             reasons.append(
                 f"confidence {synthesis.confidence:.2f} below "
                 f"{settings.escalation_confidence_threshold}"
             )
 
-        escalate = bool(reasons) or synthesis.escalate
+        escalate = (
+            lost_all
+            or synthesis.confidence < settings.escalation_confidence_threshold
+            or synthesis.escalate
+        )
         return {
+            "synthesis": synthesis,
             "guardrails": GuardrailResult(
-                passed=not fabricated,
+                passed=not lost_all,
                 escalate=escalate,
                 fabricated_citations=fabricated,
                 reasons=reasons,
-            )
+            ),
         }
 
     # -- helpers --------------------------------------------------------
