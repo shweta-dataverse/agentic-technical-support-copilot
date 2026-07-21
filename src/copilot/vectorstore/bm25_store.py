@@ -1,4 +1,4 @@
-import pickle
+import json
 from rank_bm25 import BM25Okapi
 from pathlib import Path
 
@@ -11,8 +11,8 @@ class BM25Store:
 
     @classmethod
     def load_from_metadata(cls, metadata_path: Path):
-        with open(metadata_path, "rb") as f:
-            metadata = pickle.load(f)
+        with open(metadata_path, encoding="utf-8") as f:
+            metadata = json.load(f)
 
         texts = [
             m.get("text", {}).get("text", "")

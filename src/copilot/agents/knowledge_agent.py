@@ -20,7 +20,7 @@ class KnowledgeAgent:
         self.faiss_store.load(FAISS_PATH)
 
         # load BM25 store
-        self.bm25_store = BM25Store.load_from_metadata(FAISS_PATH / "metadata.pkl")
+        self.bm25_store = BM25Store.load_from_metadata(FAISS_PATH / "metadata.json")
 
         # embedder for queries
         self.embedder = Embedder()

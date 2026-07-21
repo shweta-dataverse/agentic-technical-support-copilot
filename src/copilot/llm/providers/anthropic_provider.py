@@ -40,7 +40,7 @@ class AnthropicProvider:
         message = self._client.messages.create(
             model=self.model,
             max_tokens=max_tokens or self._default_max_tokens,
-            system=system or anthropic.NOT_GIVEN,
+            system=system if system is not None else anthropic.omit,
             messages=[{"role": "user", "content": prompt}],
         )
 

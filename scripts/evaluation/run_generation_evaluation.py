@@ -12,7 +12,7 @@ from copilot.utils.logger import get_logger
 logger = get_logger(__name__)
 
 FAISS_PATH = Path("data/processed/faiss")
-METADATA_PATH = Path("data/processed/faiss/metadata.pkl")  # bm25 metadata
+METADATA_PATH = Path("data/processed/faiss/metadata.json")  # bm25 metadata
 
 def main():
     # initialize embedder

@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import SystemMessage, UserMessage
 from azure.core.credentials import AzureKeyCredential
@@ -46,12 +48,12 @@ class AzureFoundryProvider:
         max_tokens: int | None = None,
         temperature: float | None = None,
     ) -> LLMResponse:
-        messages: list = []
+        messages: list[SystemMessage | UserMessage] = []
         if system:
             messages.append(SystemMessage(content=system))
         messages.append(UserMessage(content=prompt))
 
-        kwargs: dict = {
+        kwargs: dict[str, Any] = {
             "messages": messages,
             "max_tokens": max_tokens or self._default_max_tokens,
             "temperature": temperature

@@ -12,7 +12,7 @@ faiss_store = FAISSStore(dimension=384)
 faiss_store.load(Path("data/processed/faiss"))
 
 # load bm25 store
-bm25_store = BM25Store.load_from_metadata(Path("data/processed/faiss/metadata.pkl"))
+bm25_store = BM25Store.load_from_metadata(Path("data/processed/faiss/metadata.json"))
 
 # load embedder
 embedder = Embedder()

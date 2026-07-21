@@ -4,6 +4,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import httpx
 
 from copilot.config import Settings
@@ -32,7 +34,7 @@ class OllamaProvider:
         max_tokens: int | None = None,
         temperature: float | None = None,
     ) -> LLMResponse:
-        payload: dict = {
+        payload: dict[str, Any] = {
             "model": self.model,
             "prompt": prompt,
             "stream": False,

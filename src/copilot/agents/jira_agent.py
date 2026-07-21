@@ -20,7 +20,7 @@ class JiraAgent:
         self.faiss_store.load(FAISS_JIRA_PATH)
 
         # bm25 for jira tickets
-        self.bm25_store = BM25Store.load_from_metadata(FAISS_PATH / "metadata.pkl")
+        self.bm25_store = BM25Store.load_from_metadata(FAISS_PATH / "metadata.json")
 
         # embedder for queries
         self.embedder = Embedder()

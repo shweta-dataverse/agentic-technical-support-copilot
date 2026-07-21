@@ -20,7 +20,7 @@ def main():
         faiss_store.load(FAISS_PATH)
 
         logger.info("loading BM25 store")
-        bm25_store = BM25Store.load_from_metadata(FAISS_PATH / "metadata.pkl")
+        bm25_store = BM25Store.load_from_metadata(FAISS_PATH / "metadata.json")
 
         logger.info("initializing embedder")
         embedder = Embedder()

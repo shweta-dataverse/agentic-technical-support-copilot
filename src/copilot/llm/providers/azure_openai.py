@@ -4,6 +4,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from openai import AzureOpenAI
 
 from copilot.config import Settings
@@ -51,7 +53,7 @@ class AzureOpenAIProvider:
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": prompt})
 
-        kwargs: dict = {"model": self.model, "messages": messages}
+        kwargs: dict[str, Any] = {"model": self.model, "messages": messages}
         if self._is_reasoning_model():
             kwargs["max_completion_tokens"] = max_tokens or self._default_max_tokens
         else:

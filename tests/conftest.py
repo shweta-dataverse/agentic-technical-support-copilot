@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Generator
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -15,7 +17,14 @@ class FakeProvider:
     name = "fake"
     model = "fake-model-1"
 
-    def generate(self, prompt, *, system=None, max_tokens=None, temperature=None):
+    def generate(
+        self,
+        prompt: str,
+        *,
+        system: str | None = None,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ) -> LLMResponse:
         return LLMResponse(
             text=f"resolution for: {prompt[:40]}",
             model=self.model,
@@ -31,7 +40,7 @@ def test_settings() -> Settings:
 
 
 @pytest.fixture
-def client(test_settings) -> TestClient:
+def client(test_settings: Settings) -> Generator[TestClient, None, None]:
     app = create_app()
     app.dependency_overrides[get_settings] = lambda: test_settings
     app.dependency_overrides[get_llm_provider] = FakeProvider

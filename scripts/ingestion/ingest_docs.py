@@ -1,6 +1,6 @@
 # scripts/ingest_docs.py
 from pathlib import Path
-import pickle
+import json
 from copilot.ingestion.pdf_loader import load_pdf
 from copilot.ingestion.text_splitter import split_text
 from copilot.ingestion.embedder import Embedder
@@ -53,8 +53,8 @@ def main():
 
         # save chunks text separately (optional)
         chunks_text_only = [chunk["text"] for chunk in chunks_metadata]
-        with open(CHUNKS_PATH / "texts.pkl", "wb") as f:
-            pickle.dump(chunks_text_only, f)
+        with open(CHUNKS_PATH / "texts.json", "w", encoding="utf-8") as f:
+            json.dump(chunks_text_only, f, ensure_ascii=False)
 
         logger.info("ingestion pipeline completed successfully")
 

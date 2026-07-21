@@ -1,7 +1,7 @@
 # src/copilot/vectorstore/faiss_store.py
 
 import faiss
-import pickle
+import json
 from pathlib import Path
 from copilot.utils.logger import get_logger
 
@@ -37,8 +37,8 @@ class FAISSStore:
             path.mkdir(parents=True, exist_ok=True)
             faiss.write_index(self.index, str(path / "index.faiss"))
 
-            with open(path / "metadata.pkl", "wb") as f:
-                pickle.dump(self.metadata, f)
+            with open(path / "metadata.json", "w", encoding="utf-8") as f:
+                json.dump(self.metadata, f, ensure_ascii=False)
 
             logger.info("faiss store saved")
         except Exception:
@@ -49,8 +49,8 @@ class FAISSStore:
         try:
             self.index = faiss.read_index(str(path / "index.faiss"))
 
-            with open(path / "metadata.pkl", "rb") as f:
-                self.metadata = pickle.load(f)
+            with open(path / "metadata.json", encoding="utf-8") as f:
+                self.metadata = json.load(f)
 
             logger.info("faiss store loaded")
         except Exception:

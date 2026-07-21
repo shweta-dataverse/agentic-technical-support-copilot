@@ -12,7 +12,7 @@ if __name__ == "__main__":
     faiss.load(Path("data/processed/faiss"))
 
     bm25 = BM25Store.load_from_metadata(
-        Path("data/processed/faiss/metadata.pkl")
+        Path("data/processed/faiss/metadata.json")
     )
 
     hybrid_retriever = HybridRetriever(faiss, bm25, embedder)
