@@ -14,7 +14,7 @@ Tracks completion of the build order in the architecture design (Section 15).
 | 8 | Cold path: ADLS zones, dual-entry ingestion job, ADF pipelines | descoped — documented as an ADR (AI-eng portfolio; not a data-eng one) |
 | 9 | Infrastructure: Terraform modules, RBAC, Key Vault | done — 26 resources applied; cost in docs/COST.md |
 | 10 | Deployment: ACR, Container Apps, KEDA, smoke tests | done — live public URL; resolution served from the cloud api |
-| 11 | CI/CD: three workflows, OIDC, rollback | pending |
-| 12 | Observability completion: three layers, alerts | pending |
+| 11 | CI/CD: three workflows, OIDC, rollback | workflows written + committed; activates when OIDC + GitHub secrets configured (docs/CICD.md) |
+| 12 | Observability completion: structured JSON logs + correlation ids, langfuse live, observability model documented | done — Langfuse trajectory (live), JSON logs to Log Analytics, OTel tradeoff ADR |
 | 13 | Security & GDPR hardening: RTBF saga, audit log, COMPLIANCE.md | done — erase saga verified LIVE (masked store, index+db erase, audit, 404 after); 77 tests |
 | 14 | Docs & demo readiness | pending |
