@@ -1,4 +1,4 @@
-.PHONY: install lint test run migrate up down build
+.PHONY: install lint test run migrate check-azure up down build
 
 install:
 	pip install -e ".[dev]"
@@ -15,6 +15,9 @@ run:
 
 migrate:
 	alembic upgrade head
+
+check-azure:
+	python scripts/check_azure_openai.py
 
 up:
 	docker compose up --build

@@ -39,11 +39,13 @@ class Settings(BaseSettings):
     llm_max_tokens: int = 1024
     llm_temperature: float = 0.2
 
-    # Azure OpenAI Service
+    # Azure OpenAI Service — one resource, one endpoint/key; deployments are
+    # names routed via the request path, not separate credentials.
     azure_openai_endpoint: str = ""
     azure_openai_api_key: str = ""
     azure_openai_api_version: str = "2024-12-01-preview"
-    azure_openai_deployment: str = "gpt-4.1-mini"
+    azure_openai_deployment: str = "gpt-5-mini"
+    azure_openai_embedding_deployment: str = "text-embedding-3-small"
 
     # Azure AI Foundry (Models-as-a-Service, e.g. Grok, Mistral, Llama)
     azure_foundry_endpoint: str = ""
@@ -60,10 +62,9 @@ class Settings(BaseSettings):
     ollama_host: str = "http://localhost:11434"
 
     # ------------------------------------------------------------------
-    # embeddings + vector store (used from phase 2 onward)
+    # embeddings — text-embedding-3-small on the Azure OpenAI resource
     # ------------------------------------------------------------------
-    embedding_model: str = "all-MiniLM-L6-v2"
-    embedding_dim: int = 384
+    embedding_dim: int = 1536
 
     # ------------------------------------------------------------------
     # database (pgvector-enabled postgres)
