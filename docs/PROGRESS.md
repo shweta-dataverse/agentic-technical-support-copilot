@@ -12,8 +12,8 @@ Tracks completion of the build order in the architecture design (Section 15).
 | 6 | Evaluation plane: golden dataset, judge, MLflow, thresholds, CI gate | done — 11-case golden set, recall@k 0.94, faithfulness 0.97; gate found real citation bug, fixed via guardrail sanitization |
 | 7 | Containerization: four images + compose stack | done — docker compose up runs db+migrate+api+ui; live resolution through the api container verified |
 | 8 | Cold path: ADLS zones, dual-entry ingestion job, ADF pipelines | pending |
-| 9 | Infrastructure: Terraform modules, remote state, RBAC, Key Vault | pending |
-| 10 | Deployment: ACR, Container Apps, KEDA, smoke tests | pending |
+| 9 | Infrastructure: Terraform modules, RBAC, Key Vault | done — 26 resources applied; cost in docs/COST.md |
+| 10 | Deployment: ACR, Container Apps, KEDA, smoke tests | done — live public URL; resolution served from the cloud api |
 | 11 | CI/CD: three workflows, OIDC, rollback | pending |
 | 12 | Observability completion: three layers, alerts | pending |
 | 13 | Security & GDPR hardening: RTBF saga, audit log, COMPLIANCE.md | pending |
