@@ -1,0 +1,24 @@
+running 11 golden cases...
+  fw-update-procedure              p@k=0.25 r@k=1.00 conf=0.90 resolve  faith=1.00
+  module-replacement-coding        p@k=0.75 r@k=1.00 conf=0.90 resolve  faith=1.00
+  startup-inhibit-hw-mismatch      p@k=0.50 r@k=1.00 conf=0.85 resolve  faith=1.00
+  cpu-memory-reset                 p@k=0.75 r@k=1.00 conf=0.90 resolve  faith=1.00
+  ps-overload-sf-led               p@k=0.12 r@k=1.00 conf=0.90 resolve  faith=1.00
+  secure-boot-invalid-signature    p@k=0.88 r@k=1.00 conf=0.90 resolve  faith=1.00
+  startup-behavior-config          p@k=0.62 r@k=0.50 conf=0.90 resolve  faith=1.00
+  operating-mode-transitions       p@k=0.50 r@k=1.00 conf=0.90 resolve  faith=1.00
+  rma-warranty-return              p@k=0.00 r@k=0.00 conf=0.35 ESCALATE faith=0.98
+  licensing-tia-portal-cost        p@k=0.00 r@k=0.00 conf=0.30 ESCALATE faith=0.45
+  third-party-scada-integration    p@k=0.00 r@k=0.00 conf=0.90 resolve  faith=1.00
+
+=== aggregate ===
+retrieval precision@k : 0.547
+retrieval recall@k    : 0.938
+fabricated citations  : 0.000
+escalation accuracy   : 0.909
+mean conf (covered)   : 0.894
+faithfulness          : 0.948
+answer relevancy      : 0.945
+total cost            : EUR 0.1110
+
+EVAL GATE PASSED

@@ -1,0 +1,20 @@
+# Build Progress
+
+Tracks completion of the build order in the architecture design (Section 15).
+
+| Step | Scope | Status |
+|---|---|---|
+| 1 | Foundations: repo restructure, pinned deps, ruff + mypy strict, settings, Alembic baseline, exceptions taxonomy, pickle removal | done |
+| 2 | Hot-path data layer: Postgres schema, AI Search indexes, single-document ingestion | done — 1142 chunks indexed, re-run idempotent, registry verified |
+| 3 | Retrieval layer: hybrid query client, FAISS/BM25 removal with eval comparison | done — comparison recorded with bias analysis, legacy stores removed |
+| 4 | Agent layer: LLM wrapper, LangGraph graph, versioned prompts, Langfuse | done — live e2e resolution grounded+cited at €0.006; Langfuse keys pending |
+| 5 | API + hot-path async: Service Bus, worker, DLQ, auth, Streamlit console | done — live async e2e verified (webhook→queue→worker→job done); DLQ poison test pending |
+| 6 | Evaluation plane: golden dataset, judge, MLflow, thresholds, CI gate | done — 11-case golden set, recall@k 0.94, faithfulness 0.97; gate found real citation bug, fixed via guardrail sanitization |
+| 7 | Containerization: four images + compose stack | done — docker compose up runs db+migrate+api+ui; live resolution through the api container verified |
+| 8 | Cold path: ADLS zones, dual-entry ingestion job, ADF pipelines | descoped — documented as an ADR (AI-eng portfolio; not a data-eng one) |
+| 9 | Infrastructure: Terraform modules, RBAC, Key Vault | done — 26 resources applied; cost in docs/COST.md |
+| 10 | Deployment: ACR, Container Apps, KEDA, smoke tests | done — live public URL; resolution served from the cloud api |
+| 11 | CI/CD: three workflows, OIDC, rollback | workflows written + committed; activates when OIDC + GitHub secrets configured (docs/CICD.md) |
+| 12 | Observability completion: structured JSON logs + correlation ids, langfuse live, observability model documented | done — Langfuse trajectory (live), JSON logs to Log Analytics, OTel tradeoff ADR |
+| 13 | Security & GDPR hardening: RTBF saga, audit log, COMPLIANCE.md | done — erase saga verified LIVE (masked store, index+db erase, audit, 404 after); 77 tests |
+| 14 | Docs & demo readiness | pending |

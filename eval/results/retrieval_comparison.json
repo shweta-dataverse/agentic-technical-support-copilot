@@ -1,0 +1,82 @@
+{
+  "summary": {
+    "queries": 6,
+    "old_faiss_bm25": {
+      "recall@8": 0.8694444444444445,
+      "mrr": 1.0
+    },
+    "new_ai_search_hybrid": {
+      "recall@8": 0.5083333333333333,
+      "mrr": 0.7222222222222222
+    },
+    "notes": "page-level ground truth from v1 gold set; old system rebuilt from v1 artifacts (MiniLM 384d, 2309 chunks); new system text-embedding-3-small 1536d, 1142 chunks, server-side RRF"
+  },
+  "per_query": [
+    {
+      "query": "installation of s7-1500 automation system and its rules",
+      "old": {
+        "recall@8": 1.0,
+        "mrr": 1.0
+      },
+      "new": {
+        "recall@8": 0.2,
+        "mrr": 0.3333333333333333
+      }
+    },
+    {
+      "query": "asynchronous instructions in program execution",
+      "old": {
+        "recall@8": 0.6666666666666666,
+        "mrr": 1.0
+      },
+      "new": {
+        "recall@8": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "query": "basic information on cyber security",
+      "old": {
+        "recall@8": 0.75,
+        "mrr": 1.0
+      },
+      "new": {
+        "recall@8": 0.75,
+        "mrr": 0.5
+      }
+    },
+    {
+      "query": "Hardware configuration of the S7-1500 automation system",
+      "old": {
+        "recall@8": 0.8,
+        "mrr": 1.0
+      },
+      "new": {
+        "recall@8": 0.2,
+        "mrr": 0.5
+      }
+    },
+    {
+      "query": "Extended temperature range and installation altitude",
+      "old": {
+        "recall@8": 1.0,
+        "mrr": 1.0
+      },
+      "new": {
+        "recall@8": 0.4,
+        "mrr": 1.0
+      }
+    },
+    {
+      "query": "Shipping and storage conditions for system modules",
+      "old": {
+        "recall@8": 1.0,
+        "mrr": 1.0
+      },
+      "new": {
+        "recall@8": 0.5,
+        "mrr": 1.0
+      }
+    }
+  ]
+}

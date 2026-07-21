@@ -1,0 +1,78 @@
+# Full local stack: Postgres, migrations, API, worker, UI.
+# api and worker still call cloud Azure OpenAI and AI Search using the keys in
+# .env. The worker also needs Service Bus access, so it runs under the
+# "async" profile (start it with: docker compose --profile async up).
+
+x-app-env: &app-env
+  env_file:
+    - .env
+  environment:
+    DATABASE_URL: postgresql+psycopg://copilot:copilot@db:5432/jira_copilot
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: copilot
+      POSTGRES_PASSWORD: copilot
+      POSTGRES_DB: jira_copilot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U copilot -d jira_copilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # one-shot: apply database migrations, then exit
+  migrate:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: api
+    <<: *app-env
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: api
+    <<: *app-env
+    ports:
+      - "8000:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  ui:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: ui
+    environment:
+      COPILOT_API_URL: http://api:8000
+      COPILOT_API_KEY: ${COPILOT_API_KEY:-dev-key-change-me}
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: worker
+    <<: *app-env
+    profiles: ["async"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata:

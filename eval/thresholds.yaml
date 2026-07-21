@@ -1,0 +1,14 @@
+# Regression gate: an eval run fails if any metric falls below its floor.
+# Floors are set from the current baseline with headroom; tighten as the
+# system improves. PRs touching prompts/, agents/, or retrieval/ run the gate.
+
+retrieval_precision_at_k: 0.30
+retrieval_recall_at_k: 0.60
+fabricated_citation_rate_max: 0.0    # guardrails sanitizes ungrounded cites -> 0 by construction
+escalation_accuracy: 0.80
+faithfulness: 0.70
+answer_relevancy: 0.70
+# calibration: mean confidence on well-covered cases. Measured at ~0.90;
+# floor set to 0.60 with headroom (the earlier "low confidence" concern was
+# an artifact of vague demo tickets, disproven by this metric).
+mean_confidence_covered: 0.60

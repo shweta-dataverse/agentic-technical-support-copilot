@@ -205,3 +205,28 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ---------------------------------------------------------------------------
+# project artifacts (regenerable — never commit)
+# ---------------------------------------------------------------------------
+mlruns/
+*.egg-info/
+logs/
+data/processed/
+*.faiss
+*.pkl
+
+# personal interview prep — never publish
+docs/interview-prep.md
+
+# ---------------------------------------------------------------------------
+# terraform
+# ---------------------------------------------------------------------------
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+crash.log
+eval/results/latest_report.json
