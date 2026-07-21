@@ -26,7 +26,7 @@ def main() -> int:
     )
     for name in ensure_indexes(client):
         stats = client.get_index_statistics(name)
-        print(f"index OK: {name} (documents={stats['document_count']})")
+        print(f"index OK: {name} (documents={stats['documentCount']})")
     print("all indexes ready")
     return 0
 
