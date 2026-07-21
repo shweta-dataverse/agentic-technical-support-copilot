@@ -54,9 +54,9 @@ dependencies = [
     # observability
     "langfuse==4.14.1",
 
-    # evaluation + observability (used from the evaluation-plane step)
+    # evaluation + observability
     "ragas==0.4.3",
-    "rouge-score==0.1.2",
+    "mlflow==3.8.1",
 
     # ui (own container from the containerization step)
     "streamlit==1.53.1",

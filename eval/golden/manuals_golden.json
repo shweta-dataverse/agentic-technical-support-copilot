@@ -1,0 +1,133 @@
+[
+  {
+    "id": "fw-update-procedure",
+    "title": "How to update module firmware safely on S7-1500",
+    "description": "We need to update the firmware of I/O modules. What is the correct procedure and how do we verify it succeeded?",
+    "category": "firmware",
+    "expected_pages": [388, 389],
+    "expected_answer_points": [
+      "the CPU display shows STOP - FW UPDATE during the update",
+      "remove the SIMATIC memory card after the firmware update completes",
+      "verify the update via STEP 7, the SIMATIC Automation Tool, or the web server",
+      "analog modules require a 24 V DC load supply during the update"
+    ],
+    "expect_escalate": false
+  },
+  {
+    "id": "module-replacement-coding",
+    "title": "Replacing an I/O module and its front connector coding",
+    "description": "We are replacing a digital I/O module. How do we handle the mechanical coding element and the existing front connector?",
+    "category": "hardware",
+    "expected_pages": [379, 380, 381],
+    "expected_answer_points": [
+      "for a new I/O module break out the mechanical coding element half",
+      "insert the existing front connector into the new module until it clicks",
+      "for fail-safe F-modules transfer the electronic coding element to the new front connector"
+    ],
+    "expect_escalate": false
+  },
+  {
+    "id": "startup-inhibit-hw-mismatch",
+    "title": "Startup inhibit due to hardware configuration inconsistent",
+    "description": "After a hardware change the CPU will not enter RUN and reports a hardware configuration mismatch. The physical module revision differs from the project.",
+    "category": "configuration",
+    "expected_pages": [338, 339, 340],
+    "expected_answer_points": [
+      "the expected configuration and actual configuration deviate",
+      "the Startup CPU only if compatible setting blocks startup on mismatch",
+      "changing to Startup CPU even if mismatch allows startup despite the difference",
+      "download the corrected hardware configuration to the CPU"
+    ],
+    "expect_escalate": false
+  },
+  {
+    "id": "cpu-memory-reset",
+    "title": "How to perform a CPU memory reset",
+    "description": "We need to perform a memory reset on the CPU using the mode selector. What are the steps and what happens to the data?",
+    "category": "configuration",
+    "expected_pages": [343, 344, 346],
+    "expected_answer_points": [
+      "perform the memory reset using the mode selector",
+      "the CPU is initialized with the loaded project data from load memory"
+    ],
+    "expect_escalate": false
+  },
+  {
+    "id": "ps-overload-sf-led",
+    "title": "Power supply SF LED flashing and modules switched off",
+    "description": "The system power supply SF LED is flashing and modules to the right are not working. What is the cause and remedy?",
+    "category": "hardware",
+    "expected_pages": [169],
+    "expected_answer_points": [
+      "an overload in a power segment makes the red SF LED flash on the power supply",
+      "modules to the right of the power supply may be switched off",
+      "switch the supply voltage power off and on again after correcting the configuration"
+    ],
+    "expect_escalate": false
+  },
+  {
+    "id": "secure-boot-invalid-signature",
+    "title": "Interface module secure boot reports invalid signature",
+    "description": "After a firmware operation the interface module shows RUN, ERROR and MAINT LEDs flashing. What does this mean?",
+    "category": "firmware",
+    "expected_pages": [75, 76],
+    "expected_answer_points": [
+      "an invalid Secure Boot signature causes RUN, ERROR and MAINT LEDs to flash",
+      "the interface module must be replaced in this case",
+      "verify firmware integrity by comparing the hash of the downloaded file"
+    ],
+    "expect_escalate": false
+  },
+  {
+    "id": "startup-behavior-config",
+    "title": "Configuring the CPU startup behavior",
+    "description": "How do we configure what the CPU does at startup after POWER ON, including behavior on a module mismatch?",
+    "category": "configuration",
+    "expected_pages": [339, 342],
+    "expected_answer_points": [
+      "set the startup type after POWER ON in the CPU Startup properties",
+      "the CPU processes the startup OBs during startup",
+      "the CPU reaches RUN when the I/O is ready within the parameter assignment time"
+    ],
+    "expect_escalate": false
+  },
+  {
+    "id": "operating-mode-transitions",
+    "title": "CPU operating mode transitions STARTUP to RUN",
+    "description": "Explain the operating mode transitions of the CPU from STOP through STARTUP to RUN.",
+    "category": "configuration",
+    "expected_pages": [342, 343],
+    "expected_answer_points": [
+      "the CPU transitions STOP to STARTUP when set to RUN",
+      "the CPU goes from STARTUP to RUN once initialization completes"
+    ],
+    "expect_escalate": false
+  },
+  {
+    "id": "rma-warranty-return",
+    "title": "How do I return a defective module for warranty replacement?",
+    "description": "One of our modules is defective. What is the RMA process and warranty return address for Siemens?",
+    "category": "other",
+    "expected_pages": [],
+    "expected_answer_points": [],
+    "expect_escalate": true
+  },
+  {
+    "id": "licensing-tia-portal-cost",
+    "title": "What does a TIA Portal engineering license cost for our site?",
+    "description": "We need to budget for TIA Portal licenses. What are the current prices and license tiers?",
+    "category": "other",
+    "expected_pages": [],
+    "expected_answer_points": [],
+    "expect_escalate": true
+  },
+  {
+    "id": "third-party-scada-integration",
+    "title": "Integrating a third-party SCADA over OPC UA vendor specifics",
+    "description": "How do we configure our specific third-party SCADA vendor's OPC UA client authentication against our PLC? Vendor is not Siemens.",
+    "category": "communication",
+    "expected_pages": [],
+    "expected_answer_points": [],
+    "expect_escalate": true
+  }
+]
