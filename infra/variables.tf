@@ -41,3 +41,43 @@ variable "tags" {
   }
   description = "Tags applied to all resources."
 }
+
+# ---------------------------------------------------------------------------
+# deployment (container apps)
+# ---------------------------------------------------------------------------
+
+variable "image_tag" {
+  type        = string
+  default     = "latest"
+  description = "Container image tag to deploy (CI sets this to the git SHA)."
+}
+
+variable "deploy_apps" {
+  type        = bool
+  default     = false
+  description = "Create the container apps. Set true only after images are pushed to ACR and secrets are in Key Vault."
+}
+
+variable "azure_openai_endpoint" {
+  type        = string
+  default     = ""
+  description = "Azure OpenAI resource endpoint (the hand-created resource)."
+}
+
+variable "azure_openai_deployment" {
+  type        = string
+  default     = "gpt-5-mini"
+  description = "Chat deployment name."
+}
+
+variable "azure_openai_embedding_deployment" {
+  type        = string
+  default     = "text-embedding-3-small"
+  description = "Embedding deployment name."
+}
+
+variable "azure_openai_api_version" {
+  type        = string
+  default     = "2024-12-01-preview"
+  description = "Azure OpenAI API version."
+}

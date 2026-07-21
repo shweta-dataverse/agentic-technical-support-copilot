@@ -39,3 +39,13 @@ output "container_app_environment_id" {
 output "servicebus_namespace" {
   value = azurerm_servicebus_namespace.main.name
 }
+
+output "api_url" {
+  value       = var.deploy_apps ? "https://${azurerm_container_app.api[0].ingress[0].fqdn}" : ""
+  description = "Public URL of the deployed API (empty until deploy_apps=true)."
+}
+
+output "ui_url" {
+  value       = var.deploy_apps ? "https://${azurerm_container_app.ui[0].ingress[0].fqdn}" : ""
+  description = "Public URL of the deployed Streamlit console."
+}
