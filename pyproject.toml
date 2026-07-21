@@ -24,6 +24,8 @@ dependencies = [
     "azure-ai-inference==1.0.0b9",
 
     # agents + retrieval
+    "azure-search-documents==12.0.0",
+    "azure-identity==1.25.3",
     "langchain==1.2.7",
     "langchain-text-splitters==1.1.0",
     "langgraph==1.0.7",

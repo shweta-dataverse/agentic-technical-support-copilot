@@ -19,6 +19,9 @@ migrate:
 check-azure:
 	python scripts/check_azure_openai.py
 
+search-indexes:
+	python scripts/create_search_indexes.py
+
 up:
 	docker compose up --build
 

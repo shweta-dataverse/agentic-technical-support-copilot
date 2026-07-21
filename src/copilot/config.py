@@ -67,6 +67,14 @@ class Settings(BaseSettings):
     embedding_dim: int = 1536
 
     # ------------------------------------------------------------------
+    # Azure AI Search — hybrid retrieval indexes
+    # ------------------------------------------------------------------
+    azure_search_endpoint: str = ""
+    azure_search_api_key: str = ""  # admin key; managed identity replaces this in cloud
+    search_index_manuals: str = "manuals"
+    search_index_tickets: str = "tickets"
+
+    # ------------------------------------------------------------------
     # database (pgvector-enabled postgres)
     # ------------------------------------------------------------------
     database_url: str = Field(
