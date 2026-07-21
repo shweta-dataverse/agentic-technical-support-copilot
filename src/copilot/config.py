@@ -24,9 +24,21 @@ class Settings(BaseSettings):
     environment: Literal["local", "staging", "production"] = "local"
     log_level: str = "INFO"
 
-    # simple shared-secret API key auth for the HTTP surface.
-    # override in every real deployment.
+    # bootstrap API key for local dev; production keys live hashed in the
+    # api_keys table. Override in every real deployment.
     api_key: str = "dev-key-change-me"
+    api_key_pepper: str = "dev-pepper-change-me"
+    rate_limit_per_minute: int = 60
+    max_request_bytes: int = 1_000_000
+    cors_allowed_origins: list[str] = ["http://localhost:8501"]  # streamlit console
+
+    # jira webhook verification
+    jira_webhook_secret: str = "dev-webhook-secret"
+
+    # service bus (5B wires the real backend; empty = log-only publisher)
+    servicebus_namespace: str = ""
+    queue_ticket_ingest: str = "ticket-ingest"
+    queue_ticket_resolve: str = "ticket-resolve"
 
     # ------------------------------------------------------------------
     # llm provider selection

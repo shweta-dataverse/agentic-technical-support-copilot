@@ -1,24 +1,59 @@
-# shared FastAPI dependencies: settings, api-key auth, llm provider.
+"""Shared FastAPI dependencies: settings, db session, auth, publisher, graph."""
 
 from __future__ import annotations
 
-from typing import Annotated
+from functools import lru_cache
+from typing import Annotated, Any
 
 from fastapi import Depends, Header, HTTPException, status
+from sqlalchemy.orm import Session
 
 from copilot.config import Settings, get_settings
-from copilot.llm.providers import LLMProvider, get_llm_provider
+from copilot.db.connection import get_db
+from copilot.messaging.publisher import QueuePublisher, get_publisher
+from copilot.security.auth import authenticate
+from copilot.security.rate_limit import RateLimiter
 
 SettingsDep = Annotated[Settings, Depends(get_settings)]
-LLMProviderDep = Annotated[LLMProvider, Depends(get_llm_provider)]
+DbDep = Annotated[Session, Depends(get_db)]
+PublisherDep = Annotated[QueuePublisher, Depends(get_publisher)]
+
+
+@lru_cache
+def get_rate_limiter() -> RateLimiter:
+    return RateLimiter(get_settings().rate_limit_per_minute)
 
 
 def require_api_key(
-    settings: SettingsDep,
+    session: DbDep,
     x_api_key: Annotated[str | None, Header(alias="X-API-Key")] = None,
-) -> None:
-    if x_api_key != settings.api_key:
+) -> str:
+    key_id = authenticate(session, x_api_key)
+    if key_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="invalid or missing API key",
         )
+    allowed, retry_after = get_rate_limiter().check(key_id)
+    if not allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="rate limit exceeded",
+            headers={"Retry-After": str(retry_after)},
+        )
+    return key_id
+
+
+@lru_cache
+def get_resolution_graph() -> Any:
+    """Compiled agent graph with real dependencies (lazy, process-wide)."""
+    from copilot.agents.graph import build_graph
+    from copilot.agents.nodes import AgentNodes
+    from copilot.llm.providers import get_llm_provider
+    from copilot.llm.wrapper import LLMClient
+    from copilot.retrieval.client import HybridRetriever
+
+    nodes = AgentNodes(
+        llm=LLMClient(get_llm_provider()), retriever=HybridRetriever.from_settings()
+    )
+    return build_graph(nodes)
