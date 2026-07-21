@@ -82,6 +82,8 @@ class Settings(BaseSettings):
     azure_search_api_key: str = ""  # admin key; managed identity replaces this in cloud
     search_index_manuals: str = "manuals"
     search_index_tickets: str = "tickets"
+    retrieval_k_manuals: int = 8
+    retrieval_k_tickets: int = 5
 
     # ------------------------------------------------------------------
     # database (pgvector-enabled postgres)

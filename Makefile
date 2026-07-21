@@ -26,6 +26,9 @@ search-indexes:
 ingest:
 	python -m copilot.ingestion.cli data/raw/manuals
 
+search:
+	python -m copilot.retrieval.cli "$(q)" --index $(or $(index),manuals)
+
 up:
 	docker compose up --build
 
