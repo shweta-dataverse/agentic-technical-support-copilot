@@ -5,7 +5,7 @@ install:
 	python -m spacy download en_core_web_sm
 
 lint:
-	ruff check src tests
+	ruff check src tests ui
 	mypy
 
 test:
@@ -34,6 +34,9 @@ resolve:
 
 worker:
 	python -m copilot.worker
+
+ui:
+	COPILOT_API_KEY=$${COPILOT_API_KEY:-dev-key-change-me} streamlit run ui/app.py
 
 up:
 	docker compose up --build
