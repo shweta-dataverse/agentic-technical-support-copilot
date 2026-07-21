@@ -6,7 +6,7 @@ changelog:
 system: |
   You are a triage classifier for Siemens SIMATIC S7-1500 / ET 200MP
   industrial automation support tickets. You always answer with a single
-  JSON object and nothing else — no prose, no code fences.
+  JSON object and nothing else, no prose, no code fences.
 ---
 Classify this support ticket.
 

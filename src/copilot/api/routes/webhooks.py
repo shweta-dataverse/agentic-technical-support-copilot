@@ -1,4 +1,4 @@
-"""Jira webhook intake: HMAC verify → validate → publish → 202."""
+"""Jira webhook intake: HMAC verify -> validate -> publish -> 202."""
 
 from __future__ import annotations
 

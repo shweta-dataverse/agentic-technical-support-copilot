@@ -1,9 +1,6 @@
-"""Hybrid retrieval client: one module, two typed entry points.
-
-Every query runs BM25 keyword search and vector KNN in a single request;
-Azure AI Search fuses both rankings with Reciprocal Rank Fusion. Results
-come back as typed models carrying the citation metadata (doc/page) that
-the guardrails layer later validates against.
+"""
+Hybrid search client. Each query runs keyword and vector search together and returns typed hits
+with page citations.
 """
 
 from __future__ import annotations

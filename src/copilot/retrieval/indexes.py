@@ -1,12 +1,6 @@
-"""Azure AI Search index definitions and idempotent creation.
-
-Two indexes serve the copilot:
-  - manuals: chunked technical-manual content with page-level citations
-  - tickets: historical tickets with their resolutions
-
-Both are hybrid: BM25 over searchable text fields plus HNSW vector KNN over
-`content_vector`, with a semantic configuration for reranking (applied only
-where the service SKU supports it — the Free tier does not).
+"""
+Defines and creates the two AI Search indexes, manuals and tickets. Both are hybrid keyword
+plus vector.
 """
 
 from __future__ import annotations
@@ -136,7 +130,7 @@ def tickets_index(name: str, dimensions: int) -> SearchIndex:
 
 
 def ensure_indexes(client: SearchIndexClient) -> list[str]:
-    """Create or update both indexes. Idempotent — safe to run repeatedly.
+    """Create or update both indexes. Idempotent, safe to run repeatedly.
 
     Falls back to creating without the semantic configuration on SKUs that
     reject it (Free tier), logging the degradation instead of failing.

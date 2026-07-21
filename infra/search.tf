@@ -1,5 +1,5 @@
-# Azure AI Search — managed hybrid retrieval (keyword + vector + semantic
-# reranker). Free tier: 50 MB, 3 indexes — enough for the demo corpus.
+# Azure AI Search, managed hybrid retrieval (keyword + vector + semantic
+# reranker). Free tier: 50 MB, 3 indexes, enough for the demo corpus.
 
 resource "azurerm_search_service" "main" {
   name                = local.search_name

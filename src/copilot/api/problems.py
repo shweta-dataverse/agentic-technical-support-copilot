@@ -1,8 +1,4 @@
-"""RFC 7807 problem+json error responses.
-
-Every typed domain exception maps to exactly one HTTP status; clients see
-a stable machine-readable shape, never stack traces or internals.
-"""
+"""Turns our typed errors into RFC 7807 problem+json responses. Clients never see a stack trace."""
 
 from __future__ import annotations
 
@@ -70,7 +66,7 @@ def register_exception_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(Exception)
     async def unhandled_handler(_req: Request, exc: Exception) -> JSONResponse:
-        # log the class only — messages may carry internals or PII
+        # log the class only, messages may carry internals or PII
         logger.error("unhandled exception: %s", type(exc).__name__, exc_info=True)
         return problem_response(
             status=500,

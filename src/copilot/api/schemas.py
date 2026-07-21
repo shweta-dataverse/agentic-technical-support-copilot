@@ -64,7 +64,7 @@ class JiraWebhookIssue(BaseModel):
 
 
 class JiraWebhookPayload(BaseModel):
-    webhookEvent: str  # noqa: N815 — jira's field name
+    webhookEvent: str  # noqa: N815  (jira's field name)
     issue: JiraWebhookIssue
 
 

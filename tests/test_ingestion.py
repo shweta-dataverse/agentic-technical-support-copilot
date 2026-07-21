@@ -1,6 +1,6 @@
 """Ingestion unit tests: deterministic chunking, masking, pipeline behavior.
 
-The pipeline runs against fakes — no Azure, no Postgres. The registry uses a
+The pipeline runs against fakes, no Azure, no Postgres. The registry uses a
 minimal in-memory stand-in for the Session surface the pipeline touches.
 """
 
@@ -100,7 +100,7 @@ def make_pipeline(
         masker=FakeMasker(),
         embedder=embedder,
         indexer=indexer,
-        session=session,  # type: ignore[arg-type]  # narrow fake of Session
+        session=session, # type: ignore[arg-type]  # narrow fake of Session
     )
     return pipeline, embedder, indexer, session
 

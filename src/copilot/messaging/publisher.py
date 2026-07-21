@@ -1,9 +1,6 @@
-"""Queue publishing abstraction.
-
-The API depends on the QueuePublisher protocol; the Azure Service Bus
-implementation arrives with the async-worker step. Until a namespace is
-configured, the logging publisher records what WOULD be sent — local dev
-and unit tests never need a live bus.
+"""
+Queue publishing behind a protocol. Uses Service Bus when configured, otherwise logs the
+message for local dev.
 """
 
 from __future__ import annotations

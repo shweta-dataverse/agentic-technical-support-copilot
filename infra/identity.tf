@@ -1,4 +1,4 @@
-# User-assigned managed identity — the app's passwordless identity.
+# User-assigned managed identity, the app's passwordless identity.
 # It is granted least-privilege access to ACR (pull), Key Vault (read secrets),
 # and Storage, so no keys/connection strings live in app config.
 

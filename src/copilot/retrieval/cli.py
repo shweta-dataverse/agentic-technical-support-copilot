@@ -1,4 +1,5 @@
-"""Query the live indexes from the terminal.
+"""
+Query the live indexes from the terminal.
 
 Usage: python -m copilot.retrieval.cli "startup inhibit 0x2521" [--index tickets] [-k 5]
 """

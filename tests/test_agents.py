@@ -123,7 +123,7 @@ def test_low_confidence_escalates_even_with_valid_citations() -> None:
 
 
 def test_malformed_synthesis_degrades_to_escalation() -> None:
-    # both synthesis attempts return invalid output → degraded result, no crash
+    # both synthesis attempts return invalid output -> degraded result, no crash
     state = run_graph([TRIAGE_JSON, "not json at all", "still not json"])
     assert state.synthesis is not None
     assert state.synthesis.escalate

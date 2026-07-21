@@ -1,12 +1,8 @@
-"""Async worker: consumes the hot-path queues and does the real work.
+"""
+The background worker. It consumes the queues and does the real work.
 
-Handlers are pure functions over (session, payload) with injected
-dependencies, so every path is unit-testable without a live bus.
-
-Failure semantics (Section 9): a handler exception propagates to the
-consumer loop, which abandons the message → Service Bus redelivers →
-after max_delivery_count the message dead-letters. Handlers must therefore
-be idempotent — redelivery is not an error, it is the retry mechanism.
+Handlers are plain functions so they test without a live bus. They must be idempotent, because
+a failed message is redelivered and only dead-letters after several tries.
 """
 
 from __future__ import annotations
@@ -61,10 +57,10 @@ def handle_ticket_ingest(
     embedder: Embedder,
     indexer: TicketIndexer,
 ) -> None:
-    """PII-mask → Postgres (system of record) → embed → incremental index.
+    """PII-mask -> Postgres (system of record) -> embed -> incremental index.
 
     Ordering is the saga invariant: the record is durable in Postgres BEFORE
-    it reaches the index — a crash can leave stored-but-not-yet-indexed
+    it reaches the index, a crash can leave stored-but-not-yet-indexed
     (redelivery or the nightly reconciliation catches up), never
     indexed-but-not-stored.
     """
@@ -128,7 +124,7 @@ def handle_ticket_resolve(
     except Exception as exc:
         session.rollback()
         job.status = "failed"
-        # class name only — messages may carry PII
+        # class name only, messages may carry PII
         job.error_class = type(exc).__name__
         job.finished_at = datetime.now(UTC)
         session.commit()

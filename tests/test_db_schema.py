@@ -1,4 +1,4 @@
-"""Schema contract tests — validate the ORM metadata without a live database."""
+"""Schema contract tests, validate the ORM metadata without a live database."""
 
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ def test_resolutions_cascade_on_ticket_delete() -> None:
 
 
 def test_jobs_survive_ticket_delete() -> None:
-    """Job history is operational data, not personal data — kept on RTBF."""
+    """Job history is operational data, not personal data, kept on RTBF."""
     fk = next(iter(Base.metadata.tables["jobs"].foreign_keys))
     assert fk.ondelete == "SET NULL"
 

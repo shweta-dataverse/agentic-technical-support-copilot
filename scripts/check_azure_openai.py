@@ -40,7 +40,7 @@ def main() -> int:
         )
         text = (chat.choices[0].message.content or "").strip()
         print(f"chat:       OK  deployment={s.azure_openai_deployment!r} reply={text!r}")
-    except Exception as exc:  # noqa: BLE001 — diagnostic script, report and exit
+    except Exception as exc:  # noqa: BLE001, diagnostic script, report and exit
         print(f"chat:       FAIL deployment={s.azure_openai_deployment!r}: {exc}")
         return 1
 
@@ -58,7 +58,7 @@ def main() -> int:
         )
         if dim != s.embedding_dim:
             return 1
-    except Exception as exc:  # noqa: BLE001 — diagnostic script, report and exit
+    except Exception as exc:  # noqa: BLE001, diagnostic script, report and exit
         print(f"embeddings: FAIL deployment={s.azure_openai_embedding_deployment!r}: {exc}")
         return 1
 

@@ -1,4 +1,5 @@
-"""CLI entry: ingest one manual or every PDF in a directory.
+"""
+CLI entry: ingest one manual or every PDF in a directory.
 
 Usage: python -m copilot.ingestion.cli data/raw/manuals
 """

@@ -1,9 +1,4 @@
-"""Evaluation runner: run the system over the golden set, score, gate.
-
-Offline experiment history goes to MLflow (local file store by default;
-Azure ML workspace backend documented as the team-scale upgrade). The
-threshold gate returns a non-zero exit code on regression so CI can block.
-"""
+"""Runs the golden set, scores it, logs to MLflow, and fails if a metric is below threshold."""
 
 from __future__ import annotations
 

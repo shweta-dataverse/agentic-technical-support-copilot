@@ -1,4 +1,5 @@
-"""Run one end-to-end resolution from the terminal.
+"""
+Run one end-to-end resolution from the terminal.
 
 Usage: python -m copilot.agents.cli "<title>" "<description>"
 """
@@ -38,7 +39,7 @@ def main() -> int:
 
     assert state.triage and state.synthesis and state.guardrails
     print(f"\ntriage:     {state.triage.category}/{state.triage.severity} "
-          f"→ {state.triage.knowledge_source}")
+          f"-> {state.triage.knowledge_source}")
     print(f"retrieved:  {len(state.manual_hits)} manual chunks, "
           f"{len(state.ticket_hits)} tickets")
     print(f"confidence: {state.synthesis.confidence:.2f}   "

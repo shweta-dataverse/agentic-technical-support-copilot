@@ -9,7 +9,7 @@ class GoldenCase(BaseModel):
     """One curated ticket with manual-grounded ground truth.
 
     expected_pages: manual pages that actually contain the relevant procedure
-    (a fact about the PDF, judged from its content — never from what the
+    (a fact about the PDF, judged from its content, never from what the
     system retrieved). expect_escalate: True when the manual genuinely lacks
     coverage, so a well-calibrated system should escalate.
     """
@@ -44,7 +44,7 @@ class CaseResult(BaseModel):
 
 
 class EvalReport(BaseModel):
-    """Aggregate metrics across all cases — compared against thresholds."""
+    """Aggregate metrics across all cases, compared against thresholds."""
 
     n_cases: int
     retrieval_precision_at_k: float

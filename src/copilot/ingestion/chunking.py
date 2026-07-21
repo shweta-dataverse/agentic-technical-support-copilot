@@ -1,8 +1,6 @@
-"""Page-aware chunking with deterministic chunk identities.
-
-Chunk IDs are SHA256(doc_id : page : position) so re-ingesting the same
-document always produces the same IDs — upserts overwrite instead of
-duplicating. This is the idempotency cornerstone of the ingestion tier.
+"""
+Splits pages into chunks with stable SHA256 ids, so re-ingesting overwrites instead of
+duplicating.
 """
 
 from __future__ import annotations

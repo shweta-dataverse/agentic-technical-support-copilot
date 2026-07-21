@@ -1,8 +1,7 @@
-"""baseline
+"""
+baseline
 
-Revision ID: aec89fd3e551
-Revises: 
-Create Date: 2026-07-21 03:01:26.362208
+Revision ID: aec89fd3e551 Revises:  Create Date: 2026-07-21 03:01:26.362208
 """
 from collections.abc import Sequence
 

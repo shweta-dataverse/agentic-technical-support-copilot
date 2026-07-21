@@ -1,5 +1,4 @@
-"""Cross-cutting HTTP middleware: correlation IDs, security headers,
-request-size limits."""
+"""HTTP middleware: correlation ids, security headers, and a request size limit."""
 
 from __future__ import annotations
 

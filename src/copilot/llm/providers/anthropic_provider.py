@@ -1,4 +1,4 @@
-# Anthropic (Claude) backend — the config-switchable secondary provider.
+# Anthropic (Claude) backend, the config-switchable secondary provider.
 # Demonstrates that the agent layer is genuinely vendor-agnostic.
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ class AnthropicProvider:
         max_tokens: int | None = None,
         temperature: float | None = None,
     ) -> LLMResponse:
-        # note: temperature is intentionally ignored — the current Claude models
+        # note: temperature is intentionally ignored, the current Claude models
         # (Opus 4.x / Sonnet 5) reject sampling params; behaviour is steered via
         # the prompt instead.
         message = self._client.messages.create(

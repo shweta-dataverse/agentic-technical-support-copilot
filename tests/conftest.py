@@ -2,7 +2,7 @@
 
 Settings are a process-wide cached singleton read by many modules directly,
 so tests override via environment variables (highest precedence) and clear
-the cache — not via FastAPI dependency overrides.
+the cache, not via FastAPI dependency overrides.
 """
 
 from __future__ import annotations

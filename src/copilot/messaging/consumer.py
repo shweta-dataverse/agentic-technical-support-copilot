@@ -1,10 +1,6 @@
-"""Service Bus consumer loop with peek-lock semantics and idempotency.
-
-Message lifecycle per receive:
-  duplicate (seen message_id)      → complete immediately, skip handler
-  handler succeeds                 → mark processed, complete
-  handler raises                   → abandon → redelivery → DLQ after
-                                     max_delivery_count (Service Bus native)
+"""
+Service Bus consumer loop. Duplicates are skipped, failures are abandoned for redelivery, and
+poison messages dead-letter after five tries.
 """
 
 from __future__ import annotations
@@ -47,7 +43,7 @@ def _handle_message(
     payload = json.loads(str(message))
     try:
         handler(payload)
-    except Exception as exc:  # noqa: BLE001 — classified: abandon for redelivery
+    except Exception as exc:  # noqa: BLE001  (classified: abandon for redelivery)
         logger.error(
             "handler failed queue=%s message_id=%s correlation_id=%s error=%s "
             "delivery_count=%s",

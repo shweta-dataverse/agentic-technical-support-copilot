@@ -1,4 +1,4 @@
-"""Contract tests for the AI Search index schemas — no service required."""
+"""Contract tests for the AI Search index schemas, no service required."""
 
 from __future__ import annotations
 

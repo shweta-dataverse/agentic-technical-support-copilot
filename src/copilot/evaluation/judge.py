@@ -1,10 +1,4 @@
-"""LLM-as-judge scoring for faithfulness and answer relevancy.
-
-Uses the same cost-tracked LLM wrapper as the agents, so judge calls are
-budgeted and logged like any other. RAGAS is documented as the library-backed
-alternative; this rubric judge is preferred here for reliability and because
-it reuses the wrapper's retry/breaker/cost machinery.
-"""
+"""LLM-as-judge scoring for faithfulness and answer relevancy, using the shared LLM wrapper."""
 
 from __future__ import annotations
 

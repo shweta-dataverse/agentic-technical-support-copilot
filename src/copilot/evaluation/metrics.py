@@ -1,8 +1,4 @@
-"""Deterministic evaluation metrics — no LLM, fast, CI-safe.
-
-Page matching uses a +/-1 tolerance: a procedure often spans adjacent pages,
-so a chunk from page 389 counts as relevant to expected page 388.
-"""
+"""Deterministic eval metrics, no LLM. Page matching allows a one page tolerance."""
 
 from __future__ import annotations
 

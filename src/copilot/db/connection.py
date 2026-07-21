@@ -1,9 +1,4 @@
-"""Engine and session management.
-
-The database URL comes exclusively from application settings — never
-hardcoded. Sessions are provided through a generator suitable for FastAPI
-dependency injection.
-"""
+"""Database engine and sessions. The URL always comes from settings, never hardcoded."""
 
 from __future__ import annotations
 

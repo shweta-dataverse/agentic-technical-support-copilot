@@ -22,7 +22,7 @@ class AuthError(Exception):
 
 
 class FlakyProvider:
-    """Fails `failures` times with `exc_cls`, then succeeds."""
+    """Fails `failures` times with `exc_cls`, -> succeeds."""
 
     name = "fake"
     model = "fake-1"

@@ -1,9 +1,6 @@
-"""Agent nodes. Each node takes CopilotState and returns a partial update.
-
-Structured-output discipline: every LLM response must validate against its
-Pydantic model. On validation failure the node re-prompts once with the
-error; a second failure produces a degraded, escalated result — never a
-crash (Section 9 semantics).
+"""
+The agent nodes. Invalid model output is re-prompted once, then downgraded to an escalation,
+never a crash.
 """
 
 from __future__ import annotations
@@ -149,7 +146,7 @@ class AgentNodes:
 
         kept = [c for c in synthesis.citations if grounded(c)]
         fabricated = [c for c in synthesis.citations if not grounded(c)]
-        # deliver only grounded citations — this is the enforced invariant
+        # deliver only grounded citations, this is the enforced invariant
         synthesis.citations = kept
 
         lost_all = bool(synthesis.resolution_steps) and not kept

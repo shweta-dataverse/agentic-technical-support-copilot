@@ -1,4 +1,4 @@
-# Ollama backend — local/offline fallback provider.
+# Ollama backend, local/offline fallback provider.
 # Uses the Ollama HTTP API (not a subprocess), so it works the same way
 # inside a container or against a remote Ollama host.
 

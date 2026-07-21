@@ -1,4 +1,4 @@
-"""Langfuse integration — no-op when keys are not configured."""
+"""Langfuse integration, no-op when keys are not configured."""
 
 from __future__ import annotations
 

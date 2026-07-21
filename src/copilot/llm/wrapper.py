@@ -1,9 +1,6 @@
-"""LLM client wrapper — the single choke point for every model call.
-
-Responsibilities: timeout enforcement (via provider client config), retries
-with exponential backoff + jitter on transient failures, a circuit breaker
-per process, a per-request cost budget, and EUR cost accounting on every
-response. Agents never talk to a provider directly.
+"""
+The single place every LLM call goes through. Adds timeouts, retries, a circuit breaker, a cost
+budget, and cost tracking.
 """
 
 from __future__ import annotations
@@ -106,7 +103,7 @@ class LLMClient:
                 response = self._provider.generate(
                     prompt, system=system, max_tokens=max_tokens
                 )
-            except Exception as exc:  # noqa: BLE001 — classified below, never swallowed
+            except Exception as exc:  # noqa: BLE001  (classified below, never swallowed)
                 last_exc = exc
                 self._breaker.record_failure()
                 if not _is_retryable(exc) or attempt == settings.llm_max_retries:

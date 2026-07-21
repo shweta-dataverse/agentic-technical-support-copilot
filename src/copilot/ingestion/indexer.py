@@ -22,7 +22,7 @@ class ManualsIndexer:
         )
 
     def upsert(self, chunks: list[Chunk], vectors: list[list[float]]) -> int:
-        """merge_or_upload keyed on chunk_id — re-runs overwrite, never duplicate."""
+        """merge_or_upload keyed on chunk_id, re-runs overwrite, never duplicate."""
         now = datetime.now(UTC).isoformat()
         documents = [
             {

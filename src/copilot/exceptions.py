@@ -1,9 +1,4 @@
-"""Typed exception taxonomy.
-
-Every failure in the system is retried, degraded, escalated, or dead-lettered —
-never silently swallowed. Handlers branch on these types, never on message
-strings. The API boundary maps each type to an RFC 7807 problem+json response.
-"""
+"""The typed errors used across the app. Handlers branch on the type, never on the message text."""
 
 
 class CopilotError(Exception):

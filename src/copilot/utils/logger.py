@@ -1,5 +1,7 @@
-"""Central logging setup. (structlog JSON logging arrives with the
-observability step; interface stays stable.)"""
+"""
+Central logging setup. (structlog JSON logging arrives with the observability step; interface
+stays stable.)
+"""
 
 from __future__ import annotations
 

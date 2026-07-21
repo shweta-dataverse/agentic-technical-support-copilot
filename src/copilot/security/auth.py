@@ -1,10 +1,4 @@
-"""API-key authentication against hashed keys.
-
-Plaintext keys are never stored: the api_keys table holds
-SHA256(pepper + key). The settings bootstrap key allows local development
-before any DB keys exist; real deployments create DB keys and rotate the
-bootstrap away.
-"""
+"""API key auth. Keys are stored hashed (SHA256 of pepper plus key), never in plaintext."""
 
 from __future__ import annotations
 

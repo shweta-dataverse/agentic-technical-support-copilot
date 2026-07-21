@@ -1,6 +1,6 @@
 """Internal support-engineer console.
 
-Thin client over the FastAPI service — zero business logic here. Everything
+Thin client over the FastAPI service, zero business logic here. Everything
 it shows comes from the versioned HTTP API, which is the point: any frontend
 team could build this same console from /openapi.json.
 """
@@ -18,7 +18,7 @@ API_URL = os.environ.get("COPILOT_API_URL", "http://localhost:8000")
 API_KEY = os.environ.get("COPILOT_API_KEY", "dev-key-change-me")
 
 st.set_page_config(page_title="Support Copilot Console", page_icon="🛠", layout="wide")
-st.title("🛠 Support Copilot — internal console")
+st.title("🛠 Support Copilot, internal console")
 
 
 def api(method: str, path: str, **kwargs: Any) -> httpx.Response:
@@ -37,7 +37,7 @@ def render_resolution(result: dict[str, Any]) -> None:
 
     if escalate:
         st.error(
-            "⚠️ **Needs human review** — the copilot escalated this ticket "
+            "⚠️ **Needs human review**, the copilot escalated this ticket "
             f"(confidence {confidence:.2f})."
         )
     else:
@@ -52,7 +52,7 @@ def render_resolution(result: dict[str, Any]) -> None:
     if citations:
         st.subheader("Citations")
         for c in citations:
-            with st.expander(f"📄 {c['doc']} — page {c['page']}"):
+            with st.expander(f"📄 {c['doc']}, page {c['page']}"):
                 st.markdown(f"> {c.get('quote_span', '')}")
 
     if result.get("reasoning_summary"):
@@ -72,7 +72,7 @@ with tab_submit:
         )
         submitted = st.form_submit_button("Resolve ticket")
     if submitted and title and description:
-        with st.spinner("Agents working — triage → retrieval → synthesis → guardrails…"):
+        with st.spinner("Agents working, triage -> retrieval -> synthesis -> guardrails…"):
             resp = api("POST", "/v1/resolve", json={"title": title, "description": description})
         if resp.status_code == 200:
             body = resp.json()
@@ -96,7 +96,7 @@ with tab_ticket:
             )
             col_run, col_view = st.columns(2)
 
-            if col_run.button("Resolve async (queue → worker)"):
+            if col_run.button("Resolve async (queue -> worker)"):
                 job_resp = api("POST", f"/v1/tickets/{ticket_id}/resolve")
                 if job_resp.status_code != 202:
                     st.error(job_resp.text)
@@ -105,7 +105,7 @@ with tab_ticket:
                     placeholder = st.empty()
                     for _ in range(60):
                         job = api("GET", f"/v1/jobs/{job_id}").json()
-                        placeholder.info(f"job `{job_id}` — **{job['status']}**")
+                        placeholder.info(f"job `{job_id}`, **{job['status']}**")
                         if job["status"] in ("done", "failed"):
                             break
                         time.sleep(2)

@@ -51,7 +51,7 @@ class Settings(BaseSettings):
     llm_max_tokens: int = 4096
     llm_temperature: float = 0.2
 
-    # llm wrapper — single choke point for every model call
+    # llm wrapper, single choke point for every model call
     llm_timeout_seconds: float = 60.0
     llm_max_retries: int = 3
     llm_retry_base_seconds: float = 1.0
@@ -65,7 +65,7 @@ class Settings(BaseSettings):
     # guardrails
     escalation_confidence_threshold: float = 0.6
 
-    # Azure OpenAI Service — one resource, one endpoint/key; deployments are
+    # Azure OpenAI Service, one resource, one endpoint/key; deployments are
     # names routed via the request path, not separate credentials.
     azure_openai_endpoint: str = ""
     azure_openai_api_key: str = ""
@@ -88,13 +88,13 @@ class Settings(BaseSettings):
     ollama_host: str = "http://localhost:11434"
 
     # ------------------------------------------------------------------
-    # embeddings — text-embedding-3-small on the Azure OpenAI resource
+    # embeddings, text-embedding-3-small on the Azure OpenAI resource
     # ------------------------------------------------------------------
     embedding_dim: int = 1536
     embedding_batch_size: int = 64
 
     # ------------------------------------------------------------------
-    # ingestion — chunking and quality gates
+    # ingestion, chunking and quality gates
     # ------------------------------------------------------------------
     chunk_size: int = 1000
     chunk_overlap: int = 150
@@ -102,7 +102,7 @@ class Settings(BaseSettings):
     ingest_max_reject_rate: float = 0.20
 
     # ------------------------------------------------------------------
-    # Azure AI Search — hybrid retrieval indexes
+    # Azure AI Search, hybrid retrieval indexes
     # ------------------------------------------------------------------
     azure_search_endpoint: str = ""
     azure_search_api_key: str = ""  # admin key; managed identity replaces this in cloud
@@ -112,7 +112,7 @@ class Settings(BaseSettings):
     retrieval_k_tickets: int = 5
 
     # ------------------------------------------------------------------
-    # Langfuse (LLM observability) — no-op when keys are empty
+    # Langfuse (LLM observability), no-op when keys are empty
     # ------------------------------------------------------------------
     langfuse_public_key: str = ""
     langfuse_secret_key: str = ""
@@ -133,5 +133,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    """Cached settings singleton — read once per process."""
+    """Cached settings singleton, read once per process."""
     return Settings()

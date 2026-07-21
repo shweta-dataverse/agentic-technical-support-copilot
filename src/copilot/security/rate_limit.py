@@ -1,7 +1,6 @@
-"""Per-key sliding-window rate limiter.
-
-In-memory and per-process — correct for a single API replica; the ADR
-documents Redis as the distributed upgrade when replicas scale out.
+"""
+Per-key sliding-window rate limiter. In memory, fine for one replica; Redis is the multi-
+replica upgrade.
 """
 
 from __future__ import annotations

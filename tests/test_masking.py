@@ -1,4 +1,4 @@
-"""Presidio masking tests — require the spaCy model (installed via make install)."""
+"""Presidio masking tests, require the spaCy model (installed via make install)."""
 
 from __future__ import annotations
 

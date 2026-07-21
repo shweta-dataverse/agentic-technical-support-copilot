@@ -1,10 +1,4 @@
-"""Liveness and readiness probes.
-
-/health = process is up (no dependencies touched).
-/ready  = dependencies reachable: Postgres and AI Search. Azure OpenAI is
-deliberately not probed per-request (costed calls don't belong in probes);
-its failures surface through the LLM wrapper's circuit breaker.
-"""
+"""Health and readiness checks. /health is liveness only; /ready pings Postgres and AI Search."""
 
 from __future__ import annotations
 
@@ -36,7 +30,7 @@ def ready(settings: SettingsDep, response: Response) -> ReadyResponse:
         with get_engine().connect() as conn:
             conn.execute(text("SELECT 1"))
         checks["postgres"] = "ok"
-    except Exception as exc:  # noqa: BLE001 — probe reports, never raises
+    except Exception as exc:  # noqa: BLE001  (probe reports, never raises)
         checks["postgres"] = f"failed: {type(exc).__name__}"
 
     if settings.azure_search_endpoint:
@@ -45,7 +39,7 @@ def ready(settings: SettingsDep, response: Response) -> ReadyResponse:
 
             ManualsIndexer().count_documents()
             checks["ai_search"] = "ok"
-        except Exception as exc:  # noqa: BLE001 — probe reports, never raises
+        except Exception as exc:  # noqa: BLE001  (probe reports, never raises)
             checks["ai_search"] = f"failed: {type(exc).__name__}"
     else:
         checks["ai_search"] = "not configured"

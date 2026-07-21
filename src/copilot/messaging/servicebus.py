@@ -1,7 +1,6 @@
-"""Azure Service Bus publisher.
-
-Authenticates with DefaultAzureCredential: Managed Identity inside Azure,
-`az login` locally — no connection strings anywhere.
+"""
+Service Bus publisher. Authenticates with Managed Identity in Azure and az login locally, no
+connection strings.
 """
 
 from __future__ import annotations

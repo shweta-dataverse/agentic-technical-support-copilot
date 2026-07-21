@@ -1,4 +1,4 @@
-# Azure Database for PostgreSQL Flexible Server — system-of-record for
+# Azure Database for PostgreSQL Flexible Server, system-of-record for
 # tickets, resolutions, and eval-run results. Burstable B1ms (cheapest tier).
 
 resource "azurerm_postgresql_flexible_server" "main" {

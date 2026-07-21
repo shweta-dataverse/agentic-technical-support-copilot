@@ -50,7 +50,7 @@ def save_resolution(session: Session, state: CopilotState) -> Resolution:
         escalate=state.guardrails.escalate,
         escalation_reason="; ".join(state.guardrails.reasons)[:64] or None,
         reasoning_summary=synthesis.reasoning_summary,
-        model="",  # filled from prompt_versions/model info below when present
+        model="", # filled from prompt_versions/model info below when present
         prompt_version=state.prompt_versions.get("synthesis", ""),
         cost_eur=state.total_cost_eur,
     )

@@ -1,4 +1,4 @@
-"""Hybrid retriever unit tests — fakes for the search SDK and embedder."""
+"""Hybrid retriever unit tests, fakes for the search SDK and embedder."""
 
 from __future__ import annotations
 

@@ -12,7 +12,7 @@ def compute_signature(secret: str, body: bytes) -> str:
 
 
 def verify_signature(secret: str, body: bytes, signature: str | None) -> bool:
-    """Constant-time comparison — never use `==` on secrets."""
+    """Constant-time comparison, never use `==` on secrets."""
     if not signature:
         return False
     return hmac.compare_digest(compute_signature(secret, body), signature)

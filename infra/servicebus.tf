@@ -1,4 +1,4 @@
-# Azure Service Bus — hot-path queues with native dead-lettering.
+# Azure Service Bus, hot-path queues with native dead-lettering.
 # Basic SKU (ADR): queues + DLQ are all this workload needs; idempotency is
 # app-level (processed_messages), so Standard's duplicate detection and
 # topics/sessions would be paid-for-unused. Upgrade line: Standard when

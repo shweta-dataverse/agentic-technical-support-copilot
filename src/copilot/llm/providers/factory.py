@@ -1,4 +1,4 @@
-# provider factory — resolves the configured backend at runtime.
+# provider factory, resolves the configured backend at runtime.
 # adding a new vendor means adding one branch here; nothing else changes.
 
 from __future__ import annotations

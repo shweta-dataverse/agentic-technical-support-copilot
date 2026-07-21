@@ -1,15 +1,8 @@
-"""Manual ingestion pipeline: the hot-path single-document entry point.
+"""
+Ingests one manual: load, chunk, mask, quality-check, embed, index, register.
 
-Order matters and is deliberate:
-  load → chunk → MASK → quality-check → embed → upsert → registry
-
-Masking precedes embedding/indexing because PII baked into a vector index
-cannot be selectively removed. The registry check makes whole-document
-ingestion idempotent (content hash), and deterministic chunk IDs make the
-index upsert idempotent (re-runs overwrite).
-
-Dependencies are injected as protocols so the pipeline is testable without
-Azure or Postgres.
+Masking runs before indexing, and content hashes plus stable chunk ids make re-runs idempotent.
+Dependencies are injected so it tests without Azure or Postgres.
 """
 
 from __future__ import annotations

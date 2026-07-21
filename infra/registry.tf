@@ -1,4 +1,4 @@
-# Azure Container Registry — stores the app image built in CI.
+# Azure Container Registry, stores the app image built in CI.
 # admin user disabled; the app pulls via managed identity (AcrPull).
 
 resource "azurerm_container_registry" "main" {

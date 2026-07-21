@@ -1,8 +1,6 @@
-"""PII masking with Microsoft Presidio.
-
-Masking happens BEFORE embedding, indexing, logging, or any persistence —
-once PII reaches a vector index it cannot be selectively removed, so the
-only safe point to strip it is the pipeline entrance.
+"""
+Masks PII with Presidio. Runs before embedding or indexing, since a vector cannot be un-masked
+later.
 """
 
 from __future__ import annotations
@@ -34,6 +32,6 @@ class PiiMasker:
             return text
         anonymized = self._anonymizer.anonymize(
             text=text,
-            analyzer_results=results,  # type: ignore[arg-type]  # same shape, two packages
+            analyzer_results=results, # type: ignore[arg-type]  # same shape, two packages
         )
         return str(anonymized.text)

@@ -1,4 +1,4 @@
-# Azure AI Foundry backend — serverless "Models-as-a-Service" models
+# Azure AI Foundry backend, serverless "Models-as-a-Service" models
 # (Grok, Mistral, Llama, ...) served through the Azure AI Inference endpoint.
 # Uses the vendor-neutral azure-ai-inference SDK, so the same provider works
 # for any Foundry chat model.
@@ -61,7 +61,7 @@ class AzureFoundryProvider:
             else self._default_temperature,
         }
         # single-model serverless endpoints don't need `model`; multi-model
-        # Foundry endpoints do — pass it only when configured.
+        # Foundry endpoints do, pass it only when configured.
         if self.model:
             kwargs["model"] = self.model
 

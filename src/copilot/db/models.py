@@ -1,9 +1,4 @@
-"""System-of-record schema (PostgreSQL, Alembic-managed).
-
-Postgres is the durable source of truth for tickets, resolutions, and jobs.
-Retrieval indexes (Azure AI Search) are derived data and can be rebuilt from
-here plus the document registry at any time.
-"""
+"""The Postgres tables. Postgres is the source of truth; the search index is rebuilt from it."""
 
 from __future__ import annotations
 
@@ -101,7 +96,7 @@ class Job(Base):
         ForeignKey("tickets.ticket_id", ondelete="SET NULL")
     )
     payload: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
-    # exception class name only — never raw messages, which may carry PII
+    # exception class name only, never raw messages, which may carry PII
     error_class: Mapped[str | None] = mapped_column(String(128))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()

@@ -1,9 +1,4 @@
-"""LangGraph workflow wiring.
-
-Triage → Jira (ticket search) → [conditional] Knowledge (manual search)
-→ Synthesis → Guardrails. The knowledge step is skipped when triage deems
-ticket history sufficient.
-"""
+"""Wires the LangGraph flow: triage, ticket search, optional manuals, synthesis, guardrails."""
 
 from __future__ import annotations
 

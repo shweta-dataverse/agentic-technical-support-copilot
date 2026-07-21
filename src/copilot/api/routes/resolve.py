@@ -1,8 +1,6 @@
-"""Synchronous resolution endpoint.
-
-Runs the full agent graph in-request and persists the result. This is the
-demo/console path; production traffic uses the async
-`POST /v1/tickets/{id}/resolve` → job → worker flow.
+"""
+The synchronous resolve endpoint used by the console. Runs the agent graph and saves the
+result.
 """
 
 from __future__ import annotations

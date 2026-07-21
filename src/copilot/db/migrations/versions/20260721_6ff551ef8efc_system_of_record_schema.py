@@ -1,8 +1,7 @@
-"""system of record schema
+"""
+system of record schema
 
-Revision ID: 6ff551ef8efc
-Revises: aec89fd3e551
-Create Date: 2026-07-21 03:19:22.311790
+Revision ID: 6ff551ef8efc Revises: aec89fd3e551 Create Date: 2026-07-21 03:19:22.311790
 """
 from collections.abc import Sequence
 

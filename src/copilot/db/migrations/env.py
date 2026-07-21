@@ -1,8 +1,4 @@
-"""Alembic migration environment.
-
-Reads the database URL from application settings so migrations always target
-the same database the service is configured for.
-"""
+"""Alembic environment. Takes the database URL from application settings."""
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool

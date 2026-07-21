@@ -1,10 +1,4 @@
-"""Versioned prompt artifacts.
-
-Prompts live in prompts/*.yaml as YAML front-matter (id, version, changelog)
-followed by the user-message template. The version is logged with every LLM
-call, so any generation can be traced to the exact prompt text that produced
-it. Prompts change only via pull request.
-"""
+"""Loads versioned prompts from prompts/*.yaml. The version is logged with every call."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-# Key Vault — stores the Azure OpenAI key, Postgres password, and search key.
+# Key Vault, stores the Azure OpenAI key, Postgres password, and search key.
 # RBAC authorization (not access policies): the deployer can write secrets,
 # the app identity can only read them.
 
