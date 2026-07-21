@@ -31,10 +31,23 @@ resource "azurerm_servicebus_queue" "ticket_resolve" {
   lock_duration = "PT5M"
 }
 
-# data-plane access for the developer identity (az login); the container
-# apps' managed identities get their own assignments in the compute module
+# data-plane access for the developer identity (az login), so make worker and
+# the publisher work locally without connection strings
 resource "azurerm_role_assignment" "sb_dev_data_owner" {
   scope                = azurerm_servicebus_namespace.main.id
   role_definition_name = "Azure Service Bus Data Owner"
   principal_id         = data.azurerm_client_config.current.object_id
+}
+
+# the app identity: api publishes (sender), worker consumes (receiver)
+resource "azurerm_role_assignment" "app_sb_sender" {
+  scope                = azurerm_servicebus_namespace.main.id
+  role_definition_name = "Azure Service Bus Data Sender"
+  principal_id         = azurerm_user_assigned_identity.app.principal_id
+}
+
+resource "azurerm_role_assignment" "app_sb_receiver" {
+  scope                = azurerm_servicebus_namespace.main.id
+  role_definition_name = "Azure Service Bus Data Receiver"
+  principal_id         = azurerm_user_assigned_identity.app.principal_id
 }

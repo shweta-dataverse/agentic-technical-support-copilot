@@ -31,3 +31,11 @@ output "app_insights_connection_string" {
 output "key_vault_uri" {
   value = azurerm_key_vault.main.vault_uri
 }
+
+output "container_app_environment_id" {
+  value = azurerm_container_app_environment.main.id
+}
+
+output "servicebus_namespace" {
+  value = azurerm_servicebus_namespace.main.name
+}

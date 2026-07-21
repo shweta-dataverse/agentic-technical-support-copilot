@@ -1,4 +1,4 @@
-.PHONY: install lint test run migrate check-azure search-indexes ingest search resolve worker ui eval eval-fast up up-async down build
+.PHONY: install lint test run migrate check-azure search-indexes ingest search resolve worker ui eval eval-fast infra-plan infra-up infra-down up up-async down build
 
 install:
 	pip install -e ".[dev]"
@@ -43,6 +43,15 @@ eval-fast:
 
 ui:
 	COPILOT_API_KEY=$${COPILOT_API_KEY:-dev-key-change-me} streamlit run ui/app.py
+
+infra-plan:
+	cd infra && terraform plan
+
+infra-up:
+	cd infra && terraform apply
+
+infra-down:
+	cd infra && terraform destroy
 
 up:
 	docker compose up --build
