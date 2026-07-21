@@ -8,12 +8,12 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from copilot.config import get_settings
+from copilot.db.models import Base
 
 config = context.config
 config.set_main_option("sqlalchemy.url", get_settings().database_url)
 
-# populated from the ORM metadata once the v2 schema lands (step 2)
-target_metadata = None
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:

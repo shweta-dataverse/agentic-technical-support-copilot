@@ -1,26 +1,36 @@
-# src/copilot/db/connection.py
+"""Engine and session management.
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+The database URL comes exclusively from application settings — never
+hardcoded. Sessions are provided through a generator suitable for FastAPI
+dependency injection.
+"""
 
-# db connection url
-# format: postgresql://user:password@host:port/dbname
-DATABASE_URL = "postgresql://shwetabambal@localhost:5432/jira_copilot"
+from __future__ import annotations
 
-# create engine
-engine = create_engine(DATABASE_URL, echo=False)
+from collections.abc import Generator
+from functools import lru_cache
 
-# session factory
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine,
-)
+from sqlalchemy import Engine, create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
-# dependency to get db session
-def get_db():
-    db = SessionLocal()
+from copilot.config import get_settings
+
+
+@lru_cache
+def get_engine() -> Engine:
+    """Process-wide engine with pre-ping so stale pool connections are recycled."""
+    return create_engine(get_settings().database_url, pool_pre_ping=True)
+
+
+@lru_cache
+def get_session_factory() -> sessionmaker[Session]:
+    return sessionmaker(bind=get_engine(), autoflush=False, expire_on_commit=False)
+
+
+def get_db() -> Generator[Session, None, None]:
+    """FastAPI dependency yielding a session that always closes."""
+    session = get_session_factory()()
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()
