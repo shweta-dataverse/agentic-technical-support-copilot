@@ -2,14 +2,23 @@
 
 from __future__ import annotations
 
+from typing import Annotated, Any
+
 from fastapi import APIRouter, Depends, status
 from sqlalchemy import select
 
-from copilot.api.deps import DbDep, PublisherDep, SettingsDep, require_api_key
+from copilot.api.deps import (
+    DbDep,
+    PublisherDep,
+    SettingsDep,
+    get_tickets_indexer,
+    require_api_key,
+)
 from copilot.api.middleware import get_correlation_id
 from copilot.api.schemas import JobAcceptedResponse, ResolutionResponse, TicketResponse
 from copilot.db.models import Job, Resolution, Ticket
 from copilot.exceptions import TicketNotFoundError
+from copilot.gdpr import RtbfResult, forget_ticket
 
 router = APIRouter(
     prefix="/v1/tickets", tags=["tickets"], dependencies=[Depends(require_api_key)]
@@ -79,3 +88,14 @@ def enqueue_resolution(
         correlation_id=get_correlation_id(),
     )
     return JobAcceptedResponse(job_id=job.id)
+
+
+@router.delete("/{ticket_id}", response_model=RtbfResult)
+def delete_ticket(
+    ticket_id: str,
+    session: DbDep,
+    key_id: Annotated[str, Depends(require_api_key)],
+    deleter: Annotated[Any, Depends(get_tickets_indexer)],
+) -> RtbfResult:
+    """GDPR right-to-be-forgotten: erase the ticket from all serving stores."""
+    return forget_ticket(session, deleter, ticket_id=ticket_id, actor=f"api-key:{key_id}")

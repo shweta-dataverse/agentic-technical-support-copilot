@@ -176,3 +176,27 @@ def test_sync_resolve_returns_resolution_and_persists(
 def test_sync_resolve_validates_empty_ticket(client: TestClient) -> None:
     resp = client.post("/v1/resolve", headers=AUTH, json={"title": "", "description": ""})
     assert resp.status_code == 422
+
+
+# -- gdpr right-to-be-forgotten ---------------------------------------------
+
+
+def test_delete_ticket_erases_and_returns_result(
+    client: TestClient, fake_db: FakeDb
+) -> None:
+    fake_db.objects[(Ticket, "SUP-1")] = make_ticket()
+    resp = client.delete("/v1/tickets/SUP-1", headers=AUTH)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["ticket_id"] == "SUP-1"
+    assert body["index_deleted"] and body["ticket_deleted"] and body["audit_logged"]
+    assert fake_db.committed
+
+
+def test_delete_unknown_ticket_is_404(client: TestClient) -> None:
+    resp = client.delete("/v1/tickets/NOPE", headers=AUTH)
+    assert resp.status_code == 404
+
+
+def test_delete_requires_api_key(client: TestClient) -> None:
+    assert client.delete("/v1/tickets/SUP-1").status_code == 401

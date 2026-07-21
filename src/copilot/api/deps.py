@@ -44,6 +44,21 @@ def require_api_key(
     return key_id
 
 
+def get_tickets_indexer() -> Any:
+    """AI Search tickets index client (used for GDPR erase)."""
+    from copilot.ingestion.indexer import TicketsIndexer
+
+    return TicketsIndexer()
+
+
+@lru_cache
+def get_masker() -> Any:
+    """Shared Presidio masker (loads the spaCy model once per process)."""
+    from copilot.ingestion.masking import PiiMasker
+
+    return PiiMasker()
+
+
 @lru_cache
 def get_resolution_graph() -> Any:
     """Compiled agent graph with real dependencies (lazy, process-wide)."""

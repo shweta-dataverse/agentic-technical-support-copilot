@@ -16,7 +16,12 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from copilot.agents.state import CopilotState
-from copilot.api.deps import get_rate_limiter, get_resolution_graph
+from copilot.api.deps import (
+    get_masker,
+    get_rate_limiter,
+    get_resolution_graph,
+    get_tickets_indexer,
+)
 from copilot.api.main import create_app
 from copilot.config import get_settings
 from copilot.db.connection import get_db
@@ -69,6 +74,12 @@ class FakeResult:
     def scalar_one_or_none(self) -> Any:
         return self._value
 
+    def scalar_one(self) -> Any:
+        return self._value if isinstance(self._value, int) else 0
+
+    def scalars(self) -> list[Any]:
+        return self._value if isinstance(self._value, list) else []
+
 
 class FakeDb:
     """Narrow Session stand-in for API unit tests."""
@@ -76,6 +87,7 @@ class FakeDb:
     def __init__(self) -> None:
         self.objects: dict[tuple[type, Any], Any] = {}
         self.added: list[Any] = []
+        self.deleted: list[Any] = []
         self.committed = False
         self.query_result: Any = None
 
@@ -90,6 +102,9 @@ class FakeDb:
             obj.id = uuid.uuid4()
         self.added.append(obj)
 
+    def delete(self, obj: Any) -> None:
+        self.deleted.append(obj)
+
     def flush(self) -> None:
         pass
 
@@ -102,6 +117,19 @@ class FakeDb:
     def as_session(self) -> Session:
         """Typed view for handlers that annotate sqlalchemy Session."""
         return cast(Session, self)
+
+
+class _PassthroughMasker:
+    def mask(self, text: str) -> str:
+        return text
+
+
+class RecordingDeleter:
+    def __init__(self) -> None:
+        self.deleted: list[str] = []
+
+    def delete_ticket(self, ticket_id: str) -> None:
+        self.deleted.append(ticket_id)
 
 
 class RecordingPublisher:
@@ -149,6 +177,8 @@ def make_client(
         app.dependency_overrides[get_db] = lambda: fake_db
         app.dependency_overrides[get_publisher] = lambda: publisher
         app.dependency_overrides[get_resolution_graph] = FakeGraph
+        app.dependency_overrides[get_tickets_indexer] = lambda: RecordingDeleter()
+        app.dependency_overrides[get_masker] = lambda: _PassthroughMasker()
         client = TestClient(app, raise_server_exceptions=False)
         created.append(client)
         return client

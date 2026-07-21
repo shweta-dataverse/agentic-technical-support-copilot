@@ -84,3 +84,9 @@ class TicketsIndexer:
         results = self._client.merge_or_upload_documents([document])
         if not results[0].succeeded:
             raise RetrievalError(f"ticket index upsert failed for {ticket_id}")
+
+    def delete_ticket(self, ticket_id: str) -> None:
+        """Remove a ticket document from the index (GDPR right-to-be-forgotten)."""
+        results = self._client.delete_documents([{"ticket_id": ticket_id}])
+        if results and not results[0].succeeded:
+            raise RetrievalError(f"ticket index delete failed for {ticket_id}")
