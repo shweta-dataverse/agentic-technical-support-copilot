@@ -45,3 +45,42 @@ class ManualsIndexer:
 
     def count_documents(self) -> int:
         return int(self._client.get_document_count())
+
+
+class TicketsIndexer:
+    """Incremental single-ticket upserts into the tickets index (hot path)."""
+
+    def __init__(self) -> None:
+        settings = get_settings()
+        self._client = SearchClient(
+            endpoint=settings.azure_search_endpoint,
+            index_name=settings.search_index_tickets,
+            credential=AzureKeyCredential(settings.azure_search_api_key),
+        )
+
+    def upsert_ticket(
+        self,
+        *,
+        ticket_id: str,
+        summary: str,
+        description: str,
+        vector: list[float],
+        resolution_text: str = "",
+        category: str | None = None,
+        severity: str | None = None,
+        status: str | None = None,
+    ) -> None:
+        document = {
+            "ticket_id": ticket_id,
+            "summary": summary,
+            "description": description,
+            "resolution_text": resolution_text,
+            "content_vector": vector,
+            "category": category,
+            "severity": severity,
+            "status": status,
+            "created_at": datetime.now(UTC).isoformat(),
+        }
+        results = self._client.merge_or_upload_documents([document])
+        if not results[0].succeeded:
+            raise RetrievalError(f"ticket index upsert failed for {ticket_id}")

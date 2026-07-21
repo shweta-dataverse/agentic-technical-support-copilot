@@ -9,10 +9,11 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Callable, Generator
-from typing import Any
+from typing import Any, cast
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 
 from copilot.agents.state import CopilotState
 from copilot.api.deps import get_rate_limiter, get_resolution_graph
@@ -94,6 +95,13 @@ class FakeDb:
 
     def commit(self) -> None:
         self.committed = True
+
+    def rollback(self) -> None:
+        pass
+
+    def as_session(self) -> Session:
+        """Typed view for handlers that annotate sqlalchemy Session."""
+        return cast(Session, self)
 
 
 class RecordingPublisher:

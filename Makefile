@@ -32,6 +32,9 @@ search:
 resolve:
 	python -m copilot.agents.cli "$(title)" "$(desc)"
 
+worker:
+	python -m copilot.worker
+
 up:
 	docker compose up --build
 
