@@ -8,7 +8,7 @@ Tracks completion of the build order in the architecture design (Section 15).
 | 2 | Hot-path data layer: Postgres schema, AI Search indexes, single-document ingestion | done — 1142 chunks indexed, re-run idempotent, registry verified |
 | 3 | Retrieval layer: hybrid query client, FAISS/BM25 removal with eval comparison | done — comparison recorded with bias analysis, legacy stores removed |
 | 4 | Agent layer: LLM wrapper, LangGraph graph, versioned prompts, Langfuse | done — live e2e resolution grounded+cited at €0.006; Langfuse keys pending |
-| 5 | API + hot-path async: Service Bus, worker, DLQ, auth, Streamlit console | pending |
+| 5 | API + hot-path async: Service Bus, worker, DLQ, auth, Streamlit console | done — live async e2e verified (webhook→queue→worker→job done); DLQ poison test pending |
 | 6 | Evaluation plane: golden dataset, RAGAS, MLflow, thresholds | pending |
 | 7 | Containerization: four images + compose stack | pending |
 | 8 | Cold path: ADLS zones, dual-entry ingestion job, ADF pipelines | pending |
