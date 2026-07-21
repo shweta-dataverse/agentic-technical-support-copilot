@@ -16,5 +16,5 @@ Tracks completion of the build order in the architecture design (Section 15).
 | 10 | Deployment: ACR, Container Apps, KEDA, smoke tests | done — live public URL; resolution served from the cloud api |
 | 11 | CI/CD: three workflows, OIDC, rollback | pending |
 | 12 | Observability completion: three layers, alerts | pending |
-| 13 | Security & GDPR hardening: RTBF saga, audit log, COMPLIANCE.md | done - erase saga + sync-path masking; 77 tests; live verify pending redeploy |
+| 13 | Security & GDPR hardening: RTBF saga, audit log, COMPLIANCE.md | done — erase saga verified LIVE (masked store, index+db erase, audit, 404 after); 77 tests |
 | 14 | Docs & demo readiness | pending |
