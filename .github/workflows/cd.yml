@@ -29,6 +29,11 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # ties deploys to the GitHub "production" environment: deployment history,
+    # a live-URL link on the repo, and optional required-reviewer protection
+    environment:
+      name: production
+      url: https://copilot-dev-api.salmontree-91d55cea.swedencentral.azurecontainerapps.io
     steps:
       - uses: actions/checkout@v4
 
