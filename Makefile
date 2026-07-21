@@ -29,6 +29,9 @@ ingest:
 search:
 	python -m copilot.retrieval.cli "$(q)" --index $(or $(index),manuals)
 
+resolve:
+	python -m copilot.agents.cli "$(title)" "$(desc)"
+
 up:
 	docker compose up --build
 

@@ -32,6 +32,8 @@ class AzureOpenAIProvider:
             azure_endpoint=settings.azure_openai_endpoint,
             api_key=settings.azure_openai_api_key,
             api_version=settings.azure_openai_api_version,
+            timeout=settings.llm_timeout_seconds,
+            max_retries=0,  # retries live in the wrapper, not the SDK
         )
         logger.info("azure openai provider initialized (deployment=%s)", self.model)
 

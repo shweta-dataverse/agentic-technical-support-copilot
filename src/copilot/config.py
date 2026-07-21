@@ -36,8 +36,22 @@ class Settings(BaseSettings):
     #   ollama        -> local models            (free/offline fallback)
     # ------------------------------------------------------------------
     llm_provider: Literal["azure", "azure_foundry", "anthropic", "ollama"] = "azure"
-    llm_max_tokens: int = 1024
+    llm_max_tokens: int = 4096
     llm_temperature: float = 0.2
+
+    # llm wrapper — single choke point for every model call
+    llm_timeout_seconds: float = 60.0
+    llm_max_retries: int = 3
+    llm_retry_base_seconds: float = 1.0
+    llm_breaker_failure_threshold: int = 5
+    llm_breaker_reset_seconds: float = 30.0
+    llm_max_cost_eur_per_request: float = 0.05
+    # eur per 1M tokens for the active chat deployment (gpt-5-mini)
+    llm_price_input_per_1m_eur: float = 0.23
+    llm_price_output_per_1m_eur: float = 1.84
+
+    # guardrails
+    escalation_confidence_threshold: float = 0.6
 
     # Azure OpenAI Service — one resource, one endpoint/key; deployments are
     # names routed via the request path, not separate credentials.
@@ -84,6 +98,13 @@ class Settings(BaseSettings):
     search_index_tickets: str = "tickets"
     retrieval_k_manuals: int = 8
     retrieval_k_tickets: int = 5
+
+    # ------------------------------------------------------------------
+    # Langfuse (LLM observability) — no-op when keys are empty
+    # ------------------------------------------------------------------
+    langfuse_public_key: str = ""
+    langfuse_secret_key: str = ""
+    langfuse_host: str = "https://cloud.langfuse.com"  # EU data region
 
     # ------------------------------------------------------------------
     # database (pgvector-enabled postgres)

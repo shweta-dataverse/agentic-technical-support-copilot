@@ -46,6 +46,10 @@ dependencies = [
     # config + logging
     "python-dotenv==1.2.1",
     "structlog==25.5.0",
+    "pyyaml==6.0.3",
+
+    # observability
+    "langfuse==4.14.1",
 
     # evaluation + observability (used from the evaluation-plane step)
     "ragas==0.4.3",
@@ -60,6 +64,7 @@ dev = [
     "pytest==9.1.1",
     "ruff==0.15.20",
     "mypy==1.19.1",
+    "types-PyYAML==6.0.12.20260518",
     "ipykernel>=6.29.0",
 ]
 
@@ -69,17 +74,7 @@ target-version = "py312"
 src = ["src", "tests"]
 # legacy v1 modules — ported/rewritten in later steps; each leaves this list
 # as it is migrated.
-extend-exclude = [
-    "src/copilot/app.py",
-    "src/copilot/agents",
-    "src/copilot/evaluation",
-    "src/copilot/workflows",
-    "src/copilot/llm/model.py",
-    "src/copilot/llm/chains.py",
-    "src/copilot/llm/prompts.py",
-    "scripts",
-    "init_project.py",
-]
+extend-exclude = ["init_project.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
@@ -91,26 +86,7 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-# v2 surface only — legacy modules join as they are ported (same list as ruff).
-files = [
-    "src/copilot/config.py",
-    "src/copilot/exceptions.py",
-    "src/copilot/api",
-    "src/copilot/db",
-    "src/copilot/ingestion/chunking.py",
-    "src/copilot/ingestion/masking.py",
-    "src/copilot/ingestion/embedding.py",
-    "src/copilot/ingestion/indexer.py",
-    "src/copilot/ingestion/pdf.py",
-    "src/copilot/ingestion/pipeline.py",
-    "src/copilot/ingestion/cli.py",
-    "src/copilot/llm/providers",
-    "src/copilot/retrieval",
-    "src/copilot/messaging",
-    "src/copilot/security",
-    "src/copilot/telemetry",
-    "tests",
-]
+files = ["src/copilot", "tests"]
 
 [[tool.mypy.overrides]]
 module = [
