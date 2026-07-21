@@ -77,8 +77,13 @@ class FakeResult:
     def scalar_one(self) -> Any:
         return self._value if isinstance(self._value, int) else 0
 
-    def scalars(self) -> list[Any]:
-        return self._value if isinstance(self._value, list) else []
+    def scalars(self) -> _ScalarList:
+        return _ScalarList(self._value if isinstance(self._value, list) else [])
+
+
+class _ScalarList(list):  # type: ignore[type-arg]
+    def all(self) -> list[Any]:
+        return list(self)
 
 
 class FakeDb:

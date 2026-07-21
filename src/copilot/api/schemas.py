@@ -99,3 +99,19 @@ class TicketResponse(BaseModel):
     status: str
     source: str
     created_at: datetime
+
+
+class TicketListItem(BaseModel):
+    ticket_id: str
+    summary: str
+    category: str | None
+    severity: str | None
+    status: str
+    source: str
+    created_at: datetime
+    resolved: bool
+
+
+class SeedResponse(BaseModel):
+    created: int
+    total: int

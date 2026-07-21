@@ -200,3 +200,36 @@ def test_delete_unknown_ticket_is_404(client: TestClient) -> None:
 
 def test_delete_requires_api_key(client: TestClient) -> None:
     assert client.delete("/v1/tickets/SUP-1").status_code == 401
+
+
+# -- ticket queue -----------------------------------------------------------
+
+
+def test_list_tickets_returns_items_with_resolved_flag(
+    client: TestClient, fake_db: FakeDb
+) -> None:
+    fake_db.query_result = [make_ticket("SUP-1"), make_ticket("SUP-2")]
+    resp = client.get("/v1/tickets", headers=AUTH)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert len(body) == 2
+    assert "resolved" in body[0]
+
+
+def test_seed_creates_sample_tickets(client: TestClient, fake_db: FakeDb) -> None:
+    resp = client.post("/v1/tickets/seed", headers=AUTH)
+    assert resp.status_code == 200
+    assert resp.json()["created"] == 6  # six sample tickets
+    assert fake_db.committed
+
+
+def test_resolve_now_resolves_existing_ticket(
+    client: TestClient, fake_db: FakeDb
+) -> None:
+    fake_db.objects[(Ticket, "DEMO-1")] = make_ticket("DEMO-1")
+    resp = client.post("/v1/tickets/DEMO-1/resolve-now", headers=AUTH)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["ticket_id"] == "DEMO-1"
+    assert body["resolution_steps"]
+    assert fake_db.objects[(Ticket, "DEMO-1")].status == "resolved"
