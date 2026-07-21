@@ -26,11 +26,13 @@ REPO=shweta-dataverse/agentic-technical-support-copilot   # owner/repo
 APP_ID=$(az ad app create --display-name copilot-gh-deploy --query appId -o tsv)
 az ad sp create --id "$APP_ID"
 
-# 2. federated credential trusting pushes to main
+# 2. federated credential. The subject uses the ENVIRONMENT form because the
+#    cd deploy job runs in the "production" GitHub environment; the token
+#    subject is repo:OWNER/REPO:environment:production (not the branch form).
 az ad app federated-credential create --id "$APP_ID" --parameters "{
-  \"name\": \"gh-main\",
+  \"name\": \"gh-production\",
   \"issuer\": \"https://token.actions.githubusercontent.com\",
-  \"subject\": \"repo:$REPO:ref:refs/heads/main\",
+  \"subject\": \"repo:$REPO:environment:production\",
   \"audiences\": [\"api://AzureADTokenExchange\"]
 }"
 
