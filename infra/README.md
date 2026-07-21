@@ -23,6 +23,16 @@ Estimated burn: **< ~$20/mo** — comfortably inside the $200 / 30-day credit.
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.6
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli), then `az login`
+- Register the resource providers this stack uses (once per subscription; newer
+  ones like Container Apps are not registered by default):
+
+  ```bash
+  az provider register --namespace Microsoft.App --wait
+  az provider register --namespace Microsoft.OperationalInsights --wait
+  ```
+
+  A first apply on a fresh subscription otherwise fails with
+  `409 MissingSubscriptionRegistration`.
 
 ## Usage
 
