@@ -1,4 +1,4 @@
-.PHONY: install lint test run migrate check-azure up down build
+.PHONY: install lint test run migrate check-azure search-indexes ingest search resolve worker ui up down build
 
 install:
 	pip install -e ".[dev]"
