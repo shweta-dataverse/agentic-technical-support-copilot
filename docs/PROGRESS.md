@@ -10,7 +10,7 @@ Tracks completion of the build order in the architecture design (Section 15).
 | 4 | Agent layer: LLM wrapper, LangGraph graph, versioned prompts, Langfuse | done — live e2e resolution grounded+cited at €0.006; Langfuse keys pending |
 | 5 | API + hot-path async: Service Bus, worker, DLQ, auth, Streamlit console | done — live async e2e verified (webhook→queue→worker→job done); DLQ poison test pending |
 | 6 | Evaluation plane: golden dataset, judge, MLflow, thresholds, CI gate | done — 11-case golden set, recall@k 0.94, faithfulness 0.97; gate found real citation bug, fixed via guardrail sanitization |
-| 7 | Containerization: four images + compose stack | pending |
+| 7 | Containerization: four images + compose stack | done — docker compose up runs db+migrate+api+ui; live resolution through the api container verified |
 | 8 | Cold path: ADLS zones, dual-entry ingestion job, ADF pipelines | pending |
 | 9 | Infrastructure: Terraform modules, remote state, RBAC, Key Vault | pending |
 | 10 | Deployment: ACR, Container Apps, KEDA, smoke tests | pending |

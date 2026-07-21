@@ -1,4 +1,4 @@
-.PHONY: install lint test run migrate check-azure search-indexes ingest search resolve worker ui eval eval-fast up down build
+.PHONY: install lint test run migrate check-azure search-indexes ingest search resolve worker ui eval eval-fast up up-async down build
 
 install:
 	pip install -e ".[dev]"
@@ -47,8 +47,11 @@ ui:
 up:
 	docker compose up --build
 
+up-async:
+	docker compose --profile async up --build
+
 down:
 	docker compose down
 
 build:
-	docker build -t copilot-api:local .
+	docker compose build

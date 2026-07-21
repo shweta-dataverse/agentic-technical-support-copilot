@@ -2,13 +2,30 @@
 
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from pathlib import Path
 
 import yaml
 from pydantic import BaseModel
 
-PROMPTS_DIR = Path(__file__).resolve().parents[3] / "prompts"
+
+def _prompts_dir() -> Path:
+    """Find the prompts folder in dev and in the container.
+
+    Order: COPILOT_PROMPTS_DIR env, then ./prompts relative to the working
+    directory (repo root in dev, /app in the container), then the source tree.
+    """
+    env = os.environ.get("COPILOT_PROMPTS_DIR")
+    if env:
+        return Path(env)
+    cwd_prompts = Path("prompts")
+    if cwd_prompts.is_dir():
+        return cwd_prompts
+    return Path(__file__).resolve().parents[3] / "prompts"
+
+
+PROMPTS_DIR = _prompts_dir()
 
 
 class Prompt(BaseModel):

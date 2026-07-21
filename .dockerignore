@@ -6,12 +6,16 @@ __pycache__
 *.pyc
 *.egg-info
 mlruns
+mlflow.db
 logs
 data/processed
 notebooks
 tests
+eval/results
+infra/.terraform
 .env
 .ruff_cache
 .pytest_cache
+.mypy_cache
 *.md
 !README.md
