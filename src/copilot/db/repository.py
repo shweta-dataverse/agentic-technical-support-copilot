@@ -34,6 +34,8 @@ def upsert_ticket(
         ticket.category = category
     if severity is not None:
         ticket.severity = severity
+    # flush so the ticket row exists before dependent rows (resolutions FK)
+    session.flush()
     return ticket
 
 

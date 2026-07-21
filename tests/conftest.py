@@ -89,6 +89,9 @@ class FakeDb:
             obj.id = uuid.uuid4()
         self.added.append(obj)
 
+    def flush(self) -> None:
+        pass
+
     def commit(self) -> None:
         self.committed = True
 
