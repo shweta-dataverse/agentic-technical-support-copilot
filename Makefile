@@ -1,4 +1,4 @@
-.PHONY: install lint test run migrate check-azure search-indexes ingest search resolve worker ui up down build
+.PHONY: install lint test run migrate check-azure search-indexes ingest search resolve worker ui eval eval-fast up down build
 
 install:
 	pip install -e ".[dev]"
@@ -34,6 +34,12 @@ resolve:
 
 worker:
 	python -m copilot.worker
+
+eval:
+	python scripts/run_eval.py
+
+eval-fast:
+	python scripts/run_eval.py --no-judge
 
 ui:
 	COPILOT_API_KEY=$${COPILOT_API_KEY:-dev-key-change-me} streamlit run ui/app.py

@@ -229,3 +229,4 @@ docs/interview-prep.md
 !*.tfvars.example
 .terraform.lock.hcl
 crash.log
+eval/results/latest_report.json

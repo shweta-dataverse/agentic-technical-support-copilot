@@ -1,0 +1,47 @@
+name: Eval Gate
+
+# Runs the golden-dataset regression gate on PRs that touch the quality-
+# critical surface: prompts, agents, or retrieval. Needs Azure OpenAI + AI
+# Search access via repository secrets (OIDC/keys). A metric below its floor
+# in eval/thresholds.yaml fails the check and blocks the merge.
+
+on:
+  pull_request:
+    paths:
+      - "prompts/**"
+      - "src/copilot/agents/**"
+      - "src/copilot/retrieval/**"
+      - "eval/**"
+
+jobs:
+  eval-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -e ".[dev]"
+          python -m spacy download en_core_web_sm
+
+      - name: Run eval gate
+        env:
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ vars.AZURE_OPENAI_DEPLOYMENT }}
+          AZURE_OPENAI_EMBEDDING_DEPLOYMENT: ${{ vars.AZURE_OPENAI_EMBEDDING_DEPLOYMENT }}
+          AZURE_SEARCH_ENDPOINT: ${{ secrets.AZURE_SEARCH_ENDPOINT }}
+          AZURE_SEARCH_API_KEY: ${{ secrets.AZURE_SEARCH_API_KEY }}
+        run: make eval
+
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: eval/results/latest_report.json
