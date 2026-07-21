@@ -6,6 +6,7 @@ later.
 from __future__ import annotations
 
 from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer.nlp_engine import NlpEngineProvider
 from presidio_anonymizer import AnonymizerEngine
 
 # entities relevant to support tickets and manual excerpts
@@ -18,12 +19,22 @@ _ENTITIES = [
     "CREDIT_CARD",
 ]
 
+# pin the spaCy model we install; Presidio otherwise defaults to
+# en_core_web_lg, which is not in the image (works locally, fails in prod).
+# The medium model has good name detection without over-flagging technical
+# codes (the small model tags things like "0x2521" as a PERSON).
+_NLP_CONFIG = {
+    "nlp_engine_name": "spacy",
+    "models": [{"lang_code": "en", "model_name": "en_core_web_md"}],
+}
+
 
 class PiiMasker:
     """Detects PII spans and replaces them with <ENTITY_TYPE> placeholders."""
 
     def __init__(self) -> None:
-        self._analyzer = AnalyzerEngine()
+        nlp_engine = NlpEngineProvider(nlp_configuration=_NLP_CONFIG).create_engine()
+        self._analyzer = AnalyzerEngine(nlp_engine=nlp_engine, supported_languages=["en"])
         self._anonymizer = AnonymizerEngine()  # type: ignore[no-untyped-call]
 
     def mask(self, text: str) -> str:

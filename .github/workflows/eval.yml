@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -e ".[dev]"
-          python -m spacy download en_core_web_sm
+          python -m spacy download en_core_web_md
 
       - name: Run eval gate
         env:

@@ -11,7 +11,7 @@ WORKDIR /app
 # install runtime deps only (no dev, no eval), then the spaCy model Presidio needs
 COPY pyproject.toml README.md alembic.ini ./
 COPY src ./src
-RUN pip install . && python -m spacy download en_core_web_sm
+RUN pip install . && python -m spacy download en_core_web_md
 
 # prompt files are data, copied after the dependency layer so the cache holds
 COPY prompts ./prompts
