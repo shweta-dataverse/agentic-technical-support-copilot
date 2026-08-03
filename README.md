@@ -63,7 +63,7 @@ Enterprise support engineers resolve tickets by manually searching thousands of 
 
 The internal console: a Jira-style ticket queue with severity/status badges, live KPIs, and one-click AI resolution with clickable citations and an escalation banner.
 
-<!-- add: docs/assets/dashboard.png -->
+<!-- add: assets/dashboard.png -->
 
 ---
 
@@ -219,7 +219,7 @@ Built for the EU / German market — data residency and erasure are first-class.
 - **API security:** hashed API keys (SHA-256 + pepper, never plaintext), per-key rate limiting, HMAC-verified webhooks (constant-time compare), security headers, request-size limits.
 - **PII masking (Presidio)** before any storage, indexing, or logging — a vector is an irreversible projection of its text, so masking runs at the pipeline entrance.
 - **GDPR right-to-be-forgotten:** `DELETE /v1/tickets/{id}` runs a **verified deletion saga** across Azure AI Search + PostgreSQL, scrubs job payloads, and writes an audit-log entry. Verified live: create → masked store → erase → `404`.
-- **EU data residency:** all resources in Sweden Central; Langfuse EU region. Full data-flow map in [`docs/COMPLIANCE.md`](docs/COMPLIANCE.md).
+- **EU data residency:** all resources in Sweden Central; Langfuse EU region. A documented data-flow map records where personal data can appear in each store, and the honest limits (backups may retain erased rows until they age out).
 
 ---
 
@@ -232,7 +232,7 @@ Three concerns, three tools, one correlation ID that ties a request together.
 | Why did the agent produce *this* answer, at what cost? | **Langfuse** (agent trajectory, EU) |
 | Is the service up / fast / erroring? What happened in this request? | **Application Insights + Log Analytics** (auto from Container Apps + structured JSON logs) |
 
-The OpenTelemetry-version tradeoff (Langfuse vs. Azure Monitor exporter) and the deliberate decision *not* to self-host a Prometheus/Grafana stack are documented in [`docs/OBSERVABILITY.md`](docs/OBSERVABILITY.md).
+Two decisions are recorded as ADRs: the OpenTelemetry-SDK version conflict between Langfuse and the Azure Monitor exporter (one OTel pipeline per process, so the AI-native one wins), and the deliberate choice *not* to self-host a Prometheus/Grafana stack when Log Analytics already stores the metrics.
 
 ---
 
@@ -244,7 +244,7 @@ The OpenTelemetry-version tradeoff (Langfuse vs. Azure Monitor exporter) and the
   - `ci.yml` — ruff, mypy strict, pytest, Docker builds (api/worker/ui), Terraform fmt + validate.
   - `eval.yml` — the golden-dataset eval gate on PRs touching prompts/agents/retrieval.
   - `cd.yml` — on merge to main: build+push images by SHA → roll each app → smoke test → **roll back on failure**, authenticated by **OIDC** (no stored cloud secret) and gated by a GitHub **production environment**.
-- **Cost-engineered:** ~€19/mo running, torn down or paused when idle. Real numbers in [`docs/COST.md`](docs/COST.md).
+- **Cost-engineered:** ~€19/mo while running (Postgres + ACR dominate; Container Apps scale to zero), torn down or paused when idle. A resolution costs ~€0.006.
 
 ---
 
@@ -260,7 +260,7 @@ Foreign keys encode GDPR semantics: resolutions **cascade** with their ticket (p
 
 ## Run it locally
 
-**Prerequisites:** Docker, Python 3.12, Azure CLI (`az login`), an Azure OpenAI resource with `gpt-5-mini` + `text-embedding-3-small` deployments, and an Azure AI Search service (Free tier). Full details in [`docs/RUNBOOK.md`](docs/RUNBOOK.md).
+**Prerequisites:** Docker, Python 3.12, Azure CLI (`az login`), an Azure OpenAI resource with `gpt-5-mini` + `text-embedding-3-small` deployments, and an Azure AI Search service (Free tier).
 
 ```bash
 # 1. setup
@@ -296,7 +296,7 @@ make resolve title="CPU STOP after firmware update" \
 
 ## Run it on Azure
 
-Full walkthrough in [`docs/DEPLOY.md`](docs/DEPLOY.md); one-time OIDC setup in [`docs/CICD.md`](docs/CICD.md).
+The deploy is fully scripted; `cd.yml` performs these same steps automatically on merge to main.
 
 ```bash
 # 1. provision the platform (~8 min; review the plan + cost first)
@@ -311,7 +311,7 @@ az acr build -r <acr> -t copilot-worker:latest -f docker/Dockerfile --target wor
 az acr build -r <acr> -t copilot-ui:latest     -f docker/Dockerfile --target ui     .
 
 # 3. secrets to Key Vault, then create the apps
-#    (az keyvault secret set ...; see docs/DEPLOY.md)
+#    az keyvault secret set --vault-name <kv> --name azure-openai-key --value '<key>'   (x6)
 export TF_VAR_azure_openai_endpoint='https://<your-openai>.cognitiveservices.azure.com'
 terraform apply -var deploy_apps=true
 
@@ -350,7 +350,6 @@ eval/             golden dataset, thresholds, recorded results
 infra/            Terraform (platform + container apps)
 docker/           multi-stage Dockerfile (4 targets)
 .github/workflows ci.yml · eval.yml · cd.yml
-docs/             ADRs, COMPLIANCE, RUNBOOK, DEPLOY, COST, OBSERVABILITY
 tests/            unit + failure-path + API tests (82)
 ```
 
