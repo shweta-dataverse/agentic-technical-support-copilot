@@ -101,7 +101,7 @@ if not tickets:
 
 total = len(tickets)
 resolved = sum(1 for t in tickets if t["resolved"])
-open_count = sum(1 for t in tickets if t["status"] == "open")
+open_count = sum(1 for t in tickets if not t["resolved"])
 critical = sum(1 for t in tickets if t["severity"] == "critical")
 
 k1, k2, k3, k4 = st.columns(4)
@@ -152,6 +152,9 @@ with queue_col:
                 st.error(resp.text)
 
 # --- detail ----------------------------------------------------------------
+# Resolution state is derived from whether a Resolution row exists, never from
+# Ticket.status. The status column is workflow state and is not updated when a
+# resolution is written, so reading it here would double-count.
 
 with detail_col:
     if st.session_state.get("new_result"):
@@ -161,12 +164,14 @@ with detail_col:
 
     ticket_id = st.session_state.selected
     ticket = api("GET", f"/v1/tickets/{ticket_id}").json()
+    stored = api("GET", f"/v1/tickets/{ticket_id}/resolution")
+    state = "resolved" if stored.status_code == 200 else ticket["status"]
     sev = ticket.get("severity") or "low"
     st.markdown(f"### {ticket_id}")
     st.markdown(
         pill(sev, _SEVERITY_COLOR.get(sev, "#607d8b"))
         + " "
-        + pill(ticket["status"], _STATUS_COLOR.get(ticket["status"], "#607d8b"))
+        + pill(state, _STATUS_COLOR.get(state, "#607d8b"))
         + f" &nbsp; <span class='muted'>{ticket.get('category', '')}</span>",
         unsafe_allow_html=True,
     )
@@ -174,7 +179,6 @@ with detail_col:
     st.write(ticket["description"])
     st.divider()
 
-    stored = api("GET", f"/v1/tickets/{ticket_id}/resolution")
     if stored.status_code == 200:
         render_resolution(stored.json())
     else:
