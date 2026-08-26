@@ -58,7 +58,7 @@ Enterprise support engineers resolve tickets by manually searching thousands of 
 
 ## Live demo
 
-> 🎥 **Demo video:** _add link here_
+> 🎥 **Demo video:** *add link here*
 > 🌐 **Live deployment:** Azure Container Apps (Sweden Central, EU). The environment is provisioned on demand and paused to control cost — the demo video shows a full walkthrough.
 
 The internal console: a Jira-style ticket queue with severity/status badges, live KPIs, and one-click AI resolution with clickable citations and an escalation banner.
@@ -260,37 +260,98 @@ Foreign keys encode GDPR semantics: resolutions **cascade** with their ticket (p
 
 ## Run it locally
 
-**Prerequisites:** Docker, Python 3.12, Azure CLI (`az login`), an Azure OpenAI resource with `gpt-5-mini` + `text-embedding-3-small` deployments, and an Azure AI Search service (Free tier).
+**Prerequisites:** Docker, Python 3.12, Azure CLI (`az login`), an Azure OpenAI resource with `gpt-5-mini` + `text-embedding-3-small` deployments, and an Azure AI Search service.
+
+### 1. Setup
 
 ```bash
-# 1. setup
 python3.12 -m venv .venv && source .venv/bin/activate
 make install                      # deps + spaCy en_core_web_md
-cp .env.example .env              # fill in Azure OpenAI + AI Search endpoint/keys
-make check-azure                  # verify the model connection
-
-# 2. one-time knowledge base (indexes + ingest the manual, ~€0.005)
-make search-indexes
-docker compose up -d db
-make ingest
-
-# 3. run the full stack (Postgres + migrations + API + UI)
-make up
-curl -s -X POST localhost:8000/v1/tickets/seed -H "X-API-Key: <your API_KEY>"
-open http://localhost:8501        # the console
-
-# quality + tests
-make lint      # ruff + mypy strict
-make test      # 82 tests
-make eval      # the golden-dataset eval gate
+cp .env.example .env
 ```
 
-Try a resolution from the terminal:
+Fill in `.env`:
+
+| Variable | Where to find it |
+|---|---|
+| `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY` | Azure portal → your OpenAI resource → Keys and Endpoint |
+| `AZURE_SEARCH_ENDPOINT` / `AZURE_SEARCH_API_KEY` | Azure portal → your Search service → Settings → Keys |
+| `API_KEY` and `COPILOT_API_KEY` | Any value you choose — **must be identical**. The API validates the first; the Streamlit console sends the second. |
+
+Leave `DATABASE_URL` pointing at `localhost` : commands run on the host need it.
+Compose overrides it to the `db` service hostname for containers automatically.
+
+```bash
+make check-azure                  # fail fast: verifies both deployments respond
+```
+
+Do not continue until this passes — everything downstream depends on it.
+
+### 2. Build the knowledge base (one-time, ~€0.005)
+
+```bash
+make search-indexes               # create the manuals + tickets indexes
+docker compose up -d db           # start Postgres
+make migrate                      # create the tables (required before ingest)
+make ingest                       # PDF → chunks → PII mask → embed → index
+```
+
+`make ingest` writes to the `document_registry` table, so migrations must run
+first. Re-running it is a no-op: unchanged documents are skipped by content hash.
+
+### 3. Verify the agent without the web layer
 
 ```bash
 make resolve title="CPU STOP after firmware update" \
              desc="After updating firmware the CPU enters STOP with the SF LED on"
 ```
+
+Runs triage → retrieval → synthesis → guardrails and prints the cited answer,
+confidence, and EUR cost. An out-of-scope ticket is escalated.
+
+### 4. Run the full stack
+
+```bash
+make up                           # Postgres + migrations + API + UI (first build ~8 min)
+```
+
+In a second terminal:
+
+```bash
+curl -s -X POST localhost:8000/v1/tickets/seed -H "X-API-Key: $API_KEY"
+open http://localhost:8501        # the console
+open http://localhost:8000/docs   # interactive OpenAPI
+```
+
+Use `localhost`, not `0.0.0.0` — the latter is a bind address, not a destination.
+
+### 5. Quality gates
+
+```bash
+make lint      # ruff + mypy strict
+make test      # 82 tests, hermetic
+make eval      # golden-dataset eval gate (calls Azure, costs money)
+make eval-fast # deterministic metrics only, no LLM judge
+```
+
+### Notes
+
+- **The async path needs Azure.** `make up-async` starts the worker, but it
+  consumes from Azure Service Bus, which has no local emulator here. Locally you
+  get Postgres, the API, the UI, and the synchronous path.
+- **Reset everything:** `docker compose down -v` — the `-v` deletes the Postgres
+  volume. Without it, data survives restarts.
+- **After changing `.env`:** run `make down && make up`. Compose reads the file at
+  startup, so a restart is required.
+
+### Troubleshooting
+
+| Symptom | Cause |
+|---|---|
+| `relation "document_registry" does not exist` | `make migrate` not run before `make ingest` |
+| Console shows a `TypeError` or an empty queue | `API_KEY` and `COPILOT_API_KEY` differ; check with `docker compose config` |
+| `connection refused` on port 5432 | `DATABASE_URL` uses `db` instead of `localhost` for a host-run command |
+| `make check-azure` fails | Wrong endpoint, key, or deployment name — nothing downstream will work |
 
 ---
 
@@ -298,39 +359,145 @@ make resolve title="CPU STOP after firmware update" \
 
 The deploy is fully scripted; `cd.yml` performs these same steps automatically on merge to main.
 
+Terraform provisions everything except Azure OpenAI, which must already exist with
+`gpt-5-mini` and `text-embedding-3-small` deployed. Everything below runs from a
+shell where you've already done `az login`.
+
+### 1. Provision the platform
+
 ```bash
-# 1. provision the platform (~8 min; review the plan + cost first)
 cd infra
+
 export TF_VAR_subscription_id=$(az account show --query id -o tsv)
-export TF_VAR_postgres_admin_password='<a-strong-password>'
-terraform init && terraform apply
-
-# 2. build & push the three images to ACR
-az acr build -r <acr> -t copilot-api:latest    -f docker/Dockerfile --target api    .
-az acr build -r <acr> -t copilot-worker:latest -f docker/Dockerfile --target worker .
-az acr build -r <acr> -t copilot-ui:latest     -f docker/Dockerfile --target ui     .
-
-# 3. secrets to Key Vault, then create the apps
-#    az keyvault secret set --vault-name <kv> --name azure-openai-key --value '<key>'   (x6)
+export TF_VAR_postgres_admin_password='<choose-a-strong-password>'
 export TF_VAR_azure_openai_endpoint='https://<your-openai>.cognitiveservices.azure.com'
-terraform apply -var deploy_apps=true
 
-# 4. migrate the cloud DB, then read the public URLs
-az containerapp job start --name copilot-dev-migrate --resource-group copilot-dev-rg
-terraform output api_url
-terraform output ui_url
-
-# teardown (stops the meter)
-make infra-down
+terraform init
+terraform plan          # review what will be created and what it costs
+terraform apply
 ```
 
-After merge to main, `cd.yml` performs this deploy automatically via OIDC.
+This creates the resource group, container registry, Key Vault, managed identity,
+PostgreSQL, AI Search, Service Bus, Container Apps environment, and Log Analytics & Application Insights.
+
+Keep the three `TF_VAR_` exports set for every later `terraform` command in this
+shell. Terraform re-reads them on each run.
+
+### 2. Build and push the three images
+
+```bash
+export RG=$(terraform output -raw resource_group)
+export ACR=$(terraform output -raw acr_login_server | cut -d. -f1)
+
+cd ..
+az acr build -r $ACR -t copilot-api:latest    -f docker/Dockerfile --target api    .
+az acr build -r $ACR -t copilot-worker:latest -f docker/Dockerfile --target worker .
+az acr build -r $ACR -t copilot-ui:latest     -f docker/Dockerfile --target ui     .
+cd infra
+```
+
+`az acr build` builds in the cloud, so no local Docker daemon is needed. The
+registry has the admin user disabled, the apps pull via managed identity.
+
+### 3. Load the six secrets into Key Vault
+
+```bash
+export KV=$(terraform output -raw key_vault_uri | cut -d/ -f3 | cut -d. -f1)
+export PG=$(terraform output -raw postgres_fqdn)
+export SEARCH=$(terraform output -raw search_endpoint | cut -d/ -f3 | cut -d. -f1)
+
+# the AI Search service is new
+export SEARCH_KEY=$(az search admin-key show --service-name $SEARCH -g $RG --query primaryKey -o tsv)
+
+az keyvault secret set --vault-name $KV -n database-url \
+  --value "postgresql+psycopg://copilotadmin:${TF_VAR_postgres_admin_password}@${PG}:5432/jira_copilot?sslmode=require"
+az keyvault secret set --vault-name $KV -n azure-openai-key    --value '<your Azure OpenAI key>'
+az keyvault secret set --vault-name $KV -n azure-search-key    --value "$SEARCH_KEY"
+az keyvault secret set --vault-name $KV -n api-key             --value "$(openssl rand -hex 24)"
+az keyvault secret set --vault-name $KV -n api-key-pepper      --value "$(openssl rand -hex 32)"
+az keyvault secret set --vault-name $KV -n jira-webhook-secret --value "$(openssl rand -hex 32)"
+```
+
+| Secret | What it is |
+|---|---|
+| `database-url` | connection string to the PostgreSQL server Terraform just created |
+| `azure-openai-key` | key of your existing Azure OpenAI resource |
+| `azure-search-key` | admin key of the AI Search service Terraform just created |
+| `api-key` | the key this API requires in the `X-API-Key` header |
+| `api-key-pepper` | second secret used to hash API keys before storage |
+| `jira-webhook-secret` | shared secret Jira signs its webhook payloads with |
+
+A seventh secret, `servicebus-connection`, is created by Terraform automatically,
+KEDA needs it to read queue depth for autoscaling. You don't set it.
+
+### 4. Create the container apps
+
+```bash
+terraform apply -var deploy_apps=true
+```
+
+Creates the API, worker, UI, and the migration job. All four authenticate to ACR,
+Key Vault, and Service Bus through the user-assigned managed identity, no
+passwords in any image or environment variable.
+
+### 5. Migrate the cloud database
+
+```bash
+az containerapp job start --name copilot-dev-migrate --resource-group $RG
+
+# confirm it worked before continuing
+az containerapp job execution list --name copilot-dev-migrate --resource-group $RG \
+  --query "[0].properties.status" -o tsv        # expect: Succeeded
+```
+
+### 6. Populate the search index
+
+Terraform creates the AI Search service **empty**. Without this step the deployed
+app returns answers with no citations and escalates everything.
+
+Point your local `.env` at the cloud resources (`AZURE_SEARCH_ENDPOINT`,
+`AZURE_SEARCH_API_KEY`, `DATABASE_URL`, the values from step 3), then:
+
+```bash
+cd ..
+make search-indexes     # create the manuals + tickets indexes
+make ingest             # PDF → chunks → PII mask → embed → index (~3 min, ~€0.005)
+cd infra
+```
+
+`make ingest` writes to the `document_registry` table in the cloud database, so
+add your IP to the PostgreSQL firewall first.
+
+### 7. Open it
+
+```bash
+export API_URL=$(terraform output -raw api_url)
+export UI_URL=$(terraform output -raw ui_url)
+
+curl -s $API_URL/health
+
+curl -s -X POST $API_URL/v1/tickets/seed \
+  -H "X-API-Key: $(az keyvault secret show --vault-name $KV -n api-key --query value -o tsv)"
+
+echo $UI_URL     # open this in a browser
+```
+
+### Teardown
+
+```bash
+make infra-down     # terraform destroy — stops the meter
+```
+
+Teardown is the cost-control strategy; the platform is ~€19/month while running.
+
+After merge to `main`, `cd.yml` performs steps 2, 4 and 5 automatically via OIDC ,
+no stored cloud credentials, gated by a GitHub `production` environment.
 
 ---
 
 ## Repository structure
 
-```
+```bash
 src/copilot/
 ├── api/          FastAPI app, routers, middleware, RFC 7807 handlers
 ├── agents/       LangGraph graph, nodes, typed CopilotState

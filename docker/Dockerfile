@@ -3,6 +3,7 @@
 # images share that cached layer. Every image runs as a non-root user.
 
 FROM python:3.12-slim AS base
+
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1
