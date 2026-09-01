@@ -17,6 +17,7 @@ from copilot.agents.state import CopilotState
 from copilot.db.models import Job, Ticket
 from copilot.db.repository import save_resolution, upsert_ticket
 from copilot.exceptions import TicketNotFoundError
+from copilot.telemetry.langfuse import graph_config
 from copilot.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -110,7 +111,8 @@ def handle_ticket_resolve(
                 ticket_id=ticket.ticket_id,
                 title=ticket.summary,
                 description=ticket.description,
-            )
+            ),
+            config=graph_config()
         )
         state = CopilotState.model_validate(raw)
         assert state.triage is not None

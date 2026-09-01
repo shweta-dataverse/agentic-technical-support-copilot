@@ -26,3 +26,13 @@ def get_langfuse_callback() -> Any | None:
     )
     logger.info("langfuse tracing enabled (host=%s)", settings.langfuse_host)
     return CallbackHandler()
+
+
+def graph_config() -> dict[str, Any]:
+    """LangGraph run config with Langfuse tracing attached when configured.
+
+    Returns an empty dict when Langfuse keys are absent, so callers can pass
+    this unconditionally.
+    """
+    callback = get_langfuse_callback()
+    return {"callbacks": [callback]} if callback else {}

@@ -14,6 +14,7 @@ from copilot.agents.state import CopilotState
 from copilot.api.deps import DbDep, get_masker, get_resolution_graph, require_api_key
 from copilot.api.schemas import CitationOut, ResolutionResponse, TicketRequest
 from copilot.db.repository import save_resolution, upsert_ticket
+from copilot.telemetry.langfuse import graph_config
 
 router = APIRouter(prefix="/v1", tags=["resolve"], dependencies=[Depends(require_api_key)])
 
@@ -29,7 +30,8 @@ def resolve(
     raw = graph.invoke(
         CopilotState(
             ticket_id=ticket_id, title=ticket.title, description=ticket.description
-        )
+        ),
+        config=graph_config()
     )
     state = CopilotState.model_validate(raw)
     assert state.triage is not None and state.synthesis is not None

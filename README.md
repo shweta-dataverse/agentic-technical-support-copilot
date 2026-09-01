@@ -332,6 +332,10 @@ make lint      # ruff + mypy strict
 make test      # 82 tests, hermetic
 make eval      # golden-dataset eval gate (calls Azure, costs money)
 make eval-fast # deterministic metrics only, no LLM judge
+
+mlflow ui --port 5000
+open http://127.0.0.1:5000  # eval run history: metrics per prompt version
+open https://cloud.langfuse.com   # per-request agent traces: node timings, tokens, cost
 ```
 
 ### Notes

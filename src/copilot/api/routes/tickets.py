@@ -29,6 +29,7 @@ from copilot.db.models import Job, Resolution, Ticket
 from copilot.db.repository import save_resolution
 from copilot.exceptions import TicketNotFoundError
 from copilot.gdpr import RtbfResult, forget_ticket
+from copilot.telemetry.langfuse import graph_config
 
 router = APIRouter(
     prefix="/v1/tickets", tags=["tickets"], dependencies=[Depends(require_api_key)]
@@ -197,7 +198,8 @@ def resolve_now(
     raw = graph.invoke(
         CopilotState(
             ticket_id=ticket_id, title=ticket.summary, description=ticket.description
-        )
+        ),
+        config=graph_config()
     )
     state = CopilotState.model_validate(raw)
     assert state.triage is not None and state.synthesis is not None
