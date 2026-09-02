@@ -1,6 +1,6 @@
 # Agentic Technical (Jira) Support Copilot
 
-**A production style agentic AI system that resolves Siemens industrial automation support tickets against a real 500 page technical manual, in about thirty seconds.**
+**A production style agentic AI system that resolves Siemens industrial automation support tickets against a real 500 page technical manual, in about 30 secs.**
 
 Instead of manually searching hundreds of pages, the system:
 
