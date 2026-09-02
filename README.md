@@ -430,8 +430,9 @@ az keyvault secret set --vault-name $KV -n jira-webhook-secret --value "$(openss
 | `api-key` | the key this API requires in the `X-API-Key` header |
 | `api-key-pepper` | second secret used to hash API keys before storage |
 | `jira-webhook-secret` | shared secret Jira signs its webhook payloads with |
+| `langfuse-public-key` / `langfuse-secret-key` | agent tracing; must be a matched pair from one Langfuse project |
 
-A seventh secret, `servicebus-connection`, is created by Terraform automatically,
+A  `servicebus-connection` secret, is created by Terraform automatically,
 KEDA needs it to read queue depth for autoscaling. You don't set it.
 
 ### 4. Create the container apps

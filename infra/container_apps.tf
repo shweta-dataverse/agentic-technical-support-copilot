@@ -21,6 +21,7 @@ locals {
     { name = "AZURE_SEARCH_ENDPOINT", value = "https://${azurerm_search_service.main.name}.search.windows.net" },
     { name = "SERVICEBUS_NAMESPACE", value = azurerm_servicebus_namespace.main.name },
     { name = "AZURE_CLIENT_ID", value = azurerm_user_assigned_identity.app.client_id },
+    { name = "LANGFUSE_HOST", value = "https://cloud.langfuse.com" },
   ]
 
   # env vars sourced from Key Vault secrets
@@ -31,11 +32,14 @@ locals {
     { name = "API_KEY", secret_name = "api-key" },
     { name = "API_KEY_PEPPER", secret_name = "api-key-pepper" },
     { name = "JIRA_WEBHOOK_SECRET", secret_name = "jira-webhook-secret" },
+    { name = "LANGFUSE_PUBLIC_KEY", secret_name = "langfuse-public-key" },
+    { name = "LANGFUSE_SECRET_KEY", secret_name = "langfuse-secret-key" },
   ]
 
   kv_secrets = [
     "azure-openai-key", "azure-search-key", "database-url",
     "api-key", "api-key-pepper", "jira-webhook-secret",
+    "langfuse-public-key", "langfuse-secret-key",
   ]
 }
 
