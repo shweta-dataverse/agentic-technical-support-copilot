@@ -16,7 +16,7 @@ import streamlit as st
 API_URL = os.environ.get("COPILOT_API_URL", "http://localhost:8000")
 API_KEY = os.environ.get("COPILOT_API_KEY", "dev-key-change-me")
 
-st.set_page_config(page_title="Support Copilot", page_icon="🛠", layout="wide")
+st.set_page_config(page_title="Agentic Support Copilot", page_icon="🛠", layout="wide")
 
 _SEVERITY_COLOR = {
     "critical": "#b71c1c",
@@ -76,8 +76,13 @@ def render_resolution(result: dict[str, Any]) -> None:
 
 left, right = st.columns([0.7, 0.3])
 with left:
-    st.title("🛠 Support Copilot")
-    st.caption("Siemens SIMATIC S7-1500 · internal support console")
+    st.title("🛠 Agentic Support Copilot")
+    st.markdown(
+        "<p style='font-size:1.15rem; color:#5f6368; margin-top:-0.75rem;'>"
+        "Grounded, citation-backed resolutions for Siemens SIMATIC S7-1500 support tickets"
+        "</p>",
+        unsafe_allow_html=True,
+    )
 with right:
     if st.button("↻ Refresh queue", use_container_width=True):
         st.rerun()
