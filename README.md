@@ -89,7 +89,7 @@ right to erasure.
 
 ## Live demo
 
-> 🎥 **Demo video:** *add link here*
+> 🎥 **[Demo video](https://youtu.be/KxLEir5SE0g)**
 > 🌐 **Live deployment:** Azure Container Apps (Sweden Central, EU). The environment is provisioned on demand and paused to control cost.
 
 The internal console: a Jira-style ticket queue, live KPIs, and one-click AI resolution with clickable citations and an escalation banner.
