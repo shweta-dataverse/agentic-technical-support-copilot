@@ -69,6 +69,7 @@ right to erasure.
 - [Infrastructure & DevOps](#infrastructure--devops)
 - [Run it locally](#run-it-locally)
 - [Run it on Azure](#run-it-on-azure)
+- [Inspect the database](#inspect-the-database)
 - [Repository structure](#repository-structure)
 - [Engineering standards](#engineering-standards)
 - [Key architecture decisions](#key-architecture-decisions)
@@ -559,7 +560,45 @@ After merge to `main`, `cd.yml` performs steps 2, 4 and 5 automatically via OIDC
 no stored cloud credentials, gated by a GitHub `production` environment.
 
 ---
+## Inspect the database
 
+PostgreSQL is the system of record. Azure AI Search is derived state and can be
+rebuilt from the manuals.
+
+**On Local**
+
+```bash
+docker compose exec db psql -U copilot -d jira_copilot
+```
+
+**On Cloud** : Connect with DBeaver or any Postgres client
+
+| Field | Value |
+|---|---|
+| Host | `copilot-dev-pg-4hpjxf.postgres.database.azure.com` |
+| Port | 5432 |
+| Database | `jira_copilot` |
+| User | `copilotadmin` |
+| SSL mode | `require` (mandatory) |
+
+
+**The eight tables**
+
+| Table | Holds |
+|---|---|
+| `tickets` | every support ticket received |
+| `resolutions` | steps, citations, confidence, model, prompt version, tokens, cost |
+| `jobs` | async job status for the queue path |
+| `document_registry` | ingested documents by content hash, for idempotent re-ingestion |
+| `processed_messages` | consumer idempotency against at-least-once queue delivery |
+| `audit_log` | GDPR erasure trail |
+| `api_keys` | SHA-256 hashed with a pepper, never plaintext |
+| `alembic_version` | current schema revision |
+
+Foreign keys encode GDPR semantics: resolutions cascade with their ticket because
+they contain personal data; jobs set null because operational history does not.
+
+---
 ## Engineering standards
 
 - **`mypy --strict`** over `src` and `tests`; `ruff` for lint and import order.
