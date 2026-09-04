@@ -89,12 +89,27 @@ right to erasure.
 
 ## Live demo
 
-> 🎥 **[Demo video](https://youtu.be/KxLEir5SE0g)**
-> 🌐 **Live deployment:** Azure Container Apps (Sweden Central, EU). The environment is provisioned on demand and paused to control cost.
+## Live demo
 
-The internal console: a Jira-style ticket queue, live KPIs, and one-click AI resolution with clickable citations and an escalation banner.
+Three walkthroughs on YouTube:
 
-<!-- add: assets/dashboard.png -->
+**1. The system and the code** — https://youtu.be/KxLEir5SE0g
+Ticket resolution in the console, citations verified against the source manual,
+and a walk through the codebase.
+
+**2. API, GDPR and observability** — https://youtu.be/VRmYIwylICI 
+The REST API via Swagger, right-to-erasure deletion across both stores, MLflow
+evaluation tracking and Langfuse agent traces.
+
+**3. Azure cloud architecture** — https://youtu.be/Clt18Fvhdv8 
+Every provisioned resource: Container Apps, PostgreSQL, AI Search, AI Foundry
+deployments, Container Registry and Key Vault.
+
+🌐 **Live deployment:** Azure Container Apps (Sweden Central, EU). The environment
+is provisioned on demand and paused to control cost.
+
+The internal console: a Jira-style ticket queue, live KPIs, and one-click AI
+resolution with clickable citations and an escalation banner.
 
 ---
 
